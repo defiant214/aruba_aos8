@@ -1,24 +1,22 @@
 #!/usr/bin/env python
 
-#import os
-#import sys
-
-#sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-
 def get_node_hierarchy(session):
     get_url = 'configuration/object/node_hierarchy'
 
     if (session.api_verbose == True):
         print(f'Verbose: Sending GET to \'{session.api_url}{get_url}\' to retrieve node hierarchy')
     
-    response = session.get(get_url)
+    # Send GET to API Session
+    get_response_json = session.get(get_url)
 
-    if (response.status_code == 200):
-        response_json = response.json()
+    # Successful GET for node hierarchy
+    if (get_response_json.status_code == 200):
+        # Parse JSON response to GET
+        get_response = get_response_json.json()
         if (session.api_verbose == True):
                 print('Verbose: Node hierarchy retrieved successfully')
-        return response_json
-    
+        return get_response
+    # Unsuccessful GET for node hierarchy
     else:
         if (session.api_verbose == True):
                 print('Verbose: Unable to retrive node hierarchy')
@@ -80,7 +78,7 @@ def parse_node_hierarchy(node_hierarchy):
 def check_if_node_exists(config_path, parsed_node_hierarchy):
     
     for node in parsed_node_hierarchy:
-        if (node['config_path'] == config_path):
+        if (node.get('config_path') == config_path):
             return True
     
     return False
@@ -147,9 +145,9 @@ def post_configuration_node(session, node_path, action):
 def check_if_device_exists(mac_address, parsed_node_hierarchy):
     
     for node in parsed_node_hierarchy:
-        if node['controllers']:
+        if node.get('controllers'):
             for controller in node['controllers']:
-                if (controller['mac'] == mac_address):
+                if (controller.get('mac') == mac_address):
                     return True
     
     return False
