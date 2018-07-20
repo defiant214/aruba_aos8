@@ -21,8 +21,8 @@ def get_tacacs_server(session, config_path):
 
 def post_tacacs_server(session, config_path, action, tacacs_server_name, **kwargs):
     
-    if (action != 'add' and action != 'delete' ):
-        result_str = f'\'{action}\' is not an acceptable configuration node action'
+    if ( action != 'add' and action != 'delete' ):
+        result_str = f'\'{action}\' is not an acceptable API action'
         result = {'result_status': 1, 'result_str': result_str} 
         return result
     
@@ -109,7 +109,7 @@ def post_tacacs_server(session, config_path, action, tacacs_server_name, **kwarg
         result = {'result_status': 1, 'result_str': result_str} 
         return result
 
-def get_dot1x_auth_profiles(session, config_path):
+def get_dot1X_auth_profiles(session, config_path):
     get_url = 'configuration/object/dot1x_auth_profile'
 
     if (session.api_verbose == True):
@@ -128,133 +128,182 @@ def get_dot1x_auth_profiles(session, config_path):
                 print('Verbose: Unable to retrive Dot1X auth profile list')
         return None
 
-def add_mod_dot1x_auth_profile(session, config_path, profile_name, **kwargs):
+def post_dot1x_auth_profile(session, config_path, action, profile_name, **kwargs):
 
-    payload = {
-        '_action': 'add',
-        'profile-name': profile_name
-    } 
-    
-    for key, value in kwargs.items():
-        if(key == 'dot1x_maxf'):
-            payload[key] = {'failure-count': value}
-        elif(key == 'machine_auth_enf_enable'):
-            payload[key] = {}
-        elif(key == 'machine_auth_def_role'):
-            payload[key] = {'ma-default-role': value}
-        elif(key == 'machine_auth_cache_tmout'):
-            payload[key] = {'ma-cache-tmout': value}
-        elif(key == 'machine_auth_blklist'):
-            payload[key] = {}
-        elif(key == 'machine_auth_user_def_role'):
-            payload[key] = {'ua-default-role': value}
-        elif(key == 'idrequest_period'):
-            payload[key] = {'idr-period': value}
-            
+    if (action != 'add' and action != 'delete' ):
+        result_str = f'\'{action}\' is not an acceptable API action'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
 
-    '''    
-   {
-  "quiet_period": {
-    "qt-period": 0
-  },
-  "reauth_period": {
-    "ra-period": 0
-  },
-  "use_server_reauth_period": {},
-  "use_server_reauth_term_action": {},
-  "mkey_period": {
-    "mkr-period": 0
-  },
-  "ukey_period": {
-    "ukr-period": 0
-  },
-  "serverretry_period": {
-    "srv-ret-period": 0
-  },
-  "server_retry": {
-    "srv-retries": 0
-  },
-  "framed_mtu": {
-    "fmtu": 0
-  },
-  "max_requests": {
-    "mx-requests": 0
-  },
-  "reauth_max_requests": {
-    "ramx-requests": 0
-  },
-  "heldstate_bypass_counter": {
-    "hs-counter": 0
-  },
-  "wep_key_retries": {
-    "wk-retries": 0
-  },
-  "wep_key_size": {
-    "wk-size": 0
-  },
-  "wpakey_period_ms": {
-    "wk-period": 0
-  },
-  "wpa2key_delay": {
-    "wk-delay": 0
-  },
-  "wpagkey_delay": {
-    "wgk-delay": 0
-  },
-  "keycache_tmout": {
-    "kc-tmout": 0
-  },
-  "delete_keycache": {},
-  "wpa_key_retries": {
-    "wpak-retries": 0
-  },
-  "multicast_keyrotation": {},
-  "unicast_keyrotation": {},
-  "reauthentication": {},
-  "opp_key_caching": {},
-  "validate_pmkid": {},
-  "use_session_key": {},
-  "use_static_key": {},
-  "xSec_mtu": {
-    "xsecmtu": 0
-  },
-  "termination_mode": {},
-  "termination_eaptype": {
-    "eap_t": "eap-tls"
-  },
-  "termination_innereaptype": {
-    "inner_eap_t": "eap-mschapv2"
-  },
-  "enforce_suite_b_128": {},
-  "enforce_suite_b_192": {},
-  "enable_token_caching": {},
-  "token_caching_period": {
-    "tk-cache-period": 0
-  },
-  "ca_cert": {
-    "ca-cert-name": "string"
-  },
-  "server_cert": {
-    "server-cert-name": "string"
-  },
-  "tls_guest_access": {},
-  "tls_guest_role": {
-    "tg-role": "string"
-  },
-  "iesaa": {},
-  "eapol_logoff": {},
-  "ignore_eap_id_match": {},
-  "wpa_fast_handover": {},
-  "dot1x_cert_cn_lookup": {},
-  "dot1x_auth_profile_clone": {
-    "source": "string"
-    }
-    } 
+    if (action == 'add'):
+
+        payload = {
+            '_action': 'add',
+            'profile-name': profile_name
+        } 
     
-    '''    
+        for key, value in kwargs.items():
+            if(key == 'dot1x_maxf'):
+                payload[key] = {'failure-count': value}
+            elif(key == 'machine_auth_enf_enable'):
+                payload[key] = {}
+            elif(key == 'machine_auth_def_role'):
+                payload[key] = {'ma-default-role': value}
+            elif(key == 'machine_auth_cache_tmout'):
+                payload[key] = {'ma-cache-tmout': value}
+            elif(key == 'machine_auth_blklist'):
+                payload[key] = {}
+            elif(key == 'machine_auth_user_def_role'):
+                payload[key] = {'ua-default-role': value}
+            elif(key == 'idrequest_period'):
+                payload[key] = {'idr-period': value}
+            elif(key == 'quiet_period'):
+                payload[key] = {'qt-period': value}
+            elif(key == 'reauth_period'):
+                payload[key] = {'ra-period': value}
+            elif(key == 'use_server_reauth_period'):
+                payload[key] = {}
+            elif(key == 'use_server_reauth_term_action'):
+                payload[key] = {}
+            elif(key == 'mkey_period'):
+                payload[key] = {'mkr-period': value}
+            elif(key == 'ukey_period'):
+                payload[key] = {'ukr-period': value}
+            elif(key == 'serverretry_period'):
+                payload[key] = {'srv-ret-period': value}
+            elif(key == 'server_retry'):
+                payload[key] = {'srv-retries': value}
+            elif(key == 'framed_mtu'):
+                payload[key] = {'fmtu': value}
+            elif(key == 'max_requests'):
+                payload[key] = {'mx-requests': value}
+            elif(key == 'reauth_max_requests'):
+                payload[key] = {'ramx-requests': value}
+            elif(key == 'heldstate_bypass_counter'):
+                payload[key] = {'hs-counter': value}
+            elif(key == 'wep_key_retries'):
+                payload[key] = {'wk-retries': value}
+            elif(key == 'wep_key_size'):
+                payload[key] = {'wk-size': value}
+            elif(key == 'wpakey_period_ms'):
+                payload[key] = {'wk-period': value}
+            elif(key == 'wpa2key_delay'):
+                payload[key] = {'wk-delay': value}
+            elif(key == 'wpagkey_delay'):
+                payload[key] = {'wgk-delay': value}
+            elif(key == 'keycache_tmout'):
+                payload[key] = {'kc-tmout': value}
+            elif(key == 'delete_keycache'):
+                payload[key] = {}
+            elif(key == 'wpa_key_retries'):
+                payload[key] = {'wpak-retries': value}
+            elif(key == 'multicast_keyrotation'):
+                payload[key] = {}
+            elif(key == 'unicast_keyrotation'):
+                payload[key] = {}
+            elif(key == 'reauthentication'):
+                payload[key] = {}
+            elif(key == 'opp_key_caching'):
+                payload[key] = {}
+            elif(key == 'validate_pmkid'):
+                payload[key] = {}
+            elif(key == 'use_session_key'):
+                payload[key] = {}
+            elif(key == 'use_static_key'):
+                payload[key] = {}
+            elif(key == 'xSec_mtu'):
+                payload[key] = {'xsecmtu': value}
+            elif(key == 'termination_mode'):
+                payload[key] = {}
+            elif(key == 'termination_eaptype'):
+                payload[key] = {'eap_t': value}
+            elif(key == 'termination_innereaptype'):
+                payload[key] = {'inner_eap_t': value}
+            elif(key == 'enforce_suite_b_128'):
+                payload[key] = {}
+            elif(key == 'enforce_suite_b_192'):
+                payload[key] = {}
+            elif(key == 'enable_token_caching'):
+                payload[key] = {}
+            elif(key == 'token_caching_period'):
+                payload[key] = {'tk-cache-period': value}
+            elif(key == 'ca_cert'):
+                payload[key] = {'ca-cert-name': value}
+            elif(key == 'server_cert'):
+                payload[key] = {'server-cert-name': value}
+            elif(key == 'tls_guest_access'):
+                payload[key] = {}
+            elif(key == 'tls_guest_role'):
+                payload[key] = {'tg-role': value}
+            elif(key == 'iesaa'):
+                payload[key] = {}
+            elif(key == 'eapol_logoff'):
+                payload[key] = {}
+            elif(key == 'ignore_eap_id_match'):
+                payload[key] = {}
+            elif(key == 'wpa_fast_handover'):
+                payload[key] = {}
+            elif(key == 'dot1x_cert_cn_lookup'):
+                payload[key] = {}
+            elif(key == 'dot1x_auth_profile_clone'):
+                payload[key] = {'source': value}
+            else:
+                result_str = f'\'{key}\' is not a configurable setting for the Dot1X auth profile'
+                result = {'result_status': 1, 'result_str': result_str} 
+                return result 
+
+    elif (action == 'delete'):
+        if (session.api_verbose == True):
+            print(f'Verbose: Checking to see if dot1X auth profile \'{profile_name}\' already exists')
+
+        dot1X_auth_profile_list = get_dot1X_auth_profiles(session,config_path)
+
+        if not dot1X_auth_profile_list:
+            result_str = f'dot1X auth profile \'{profile_name}\' does not exist'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+
+        else:
+            for profile in dot1X_auth_profile_list:
+                if (profile['profile-name'] == profile_name):
+                    break        
+            else:
+                result_str = f'Dot1X auth profile \'{profile_name}\' does not exist'
+                result = {'result_status': 1, 'result_str': result_str} 
+                return result
     
+        if (session.api_verbose == True):
+            print(f'Verbose: Dot1X auth profile \'{profile_name}\' exists')
     
-    return
+
+        payload = {
+            '_action': 'delete',
+            "profile-name": profile_name
+        }
+    
+    post_url = 'configuration/object/dot1x_auth_profile'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to {action} dot1X auth profile \'{profile_name}\'')
+    
+    response = session.post(post_url, config_path, payload)
+
+    if (response.status_code == 200):
+        
+        response_json = response.json()
+        
+        if (response_json['_global_result']['status'] == 0):
+            result_str = f'{action.upper()} dot1X auth profile \'{profile_name}\' - SUCCESS'
+            result = {'result_status': 0, 'result_str': result_str} 
+            return result
+        else:
+            result_str = f'{action.upper()} dot1X auth profile \'{profile_name}\' - FAILED'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+    else:
+        result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
 
 def get_aaa_profiles(session, config_path):
     get_url = 'configuration/object/aaa_prof'

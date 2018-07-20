@@ -88,7 +88,7 @@ def check_if_node_exists(config_path, parsed_node_hierarchy):
 def post_configuration_node(session, node_path, action):
     
     if (action != 'add' and action != 'delete' ):
-        result_str = f'\'{action}\' is not an acceptable configuration node action'
+        result_str = f'\'{action}\' is not an acceptable API action'
         result = {'result_status': 1, 'result_str': result_str} 
         return result
     
@@ -157,7 +157,7 @@ def check_if_device_exists(mac_address, parsed_node_hierarchy):
 def post_configuration_device(session, node_path, action, device_model, mac_address):
     
     if (action != 'add' and action != 'delete' ):
-        result_str = f'\'{action}\' is not an acceptable configuration device action'
+        result_str = f'\'{action}\' is not an acceptable API action'
         result = {'result_status': 1, 'result_str': result_str} 
         return result
     
