@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 def get_tacacs_server(session, config_path):
+    
     get_url = 'configuration/object/tacacs_server'
 
     if (session.api_verbose == True):
@@ -324,90 +325,126 @@ def get_aaa_profiles(session, config_path):
                 print('Verbose: Unable to retrive AAA Profile list')
         return None
 
-def add_mod_aaa_profile(session, config_path, profile_name, **kwargs):
+def post_aaa_profile(session, config_path, action, profile_name, **kwargs):
     
-    payload = {
-        '_action': 'add',
-        'profile-name': profile_name
-    }
+    if (action != 'add' and action != 'delete' ):
+        result_str = f'\'{action}\' is not an acceptable API action'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
+
+    if (action == 'add'):
+
+        payload = {
+            '_action': 'add',
+            'profile-name': profile_name
+        }
     
-    for key, value in kwargs.items():
-        if(key == 'default_user_role'):
-            payload[key] = {'role': value}
-        elif(key == 'mac_auth_profile'):
-            payload[key] = {'profile-name':value}
-        elif(key == 'mac_auth_profile'):
-            payload[key] = {'profile-name':value}
-        elif(key == 'mac_default_role'):
-            payload[key] = {'default-role':value}
-        elif(key == 'mba_server_group'):
-            payload[key] = {'srv-group':value}
-        elif(key == 'dot1x_auth_profile'):
-            payload[key] = {'profile-name':value}
-        elif(key == 'dot1x_default_role'):
-            payload[key] = {'default-role':value}
-        elif(key == 'dot1x_server_group'):
-            payload[key] = {'srv-group':value}
-        elif(key == 'download_role'):
-            payload[key] = {}
-        elif(key == 'username_from_dhcp_opt12'):
-            payload[key] = {}
-        elif(key == 'l2_auth_fail_through'):
-            payload[key] = {}
-        elif(key == 'multiple_server_accounting'):
-            payload[key] = {}
-        elif(key == 'user_idle_timeout_aaa'):
-            payload[key] = {'seconds':value}
-        elif(key == 'max_ipv4_for_wireless'):
-            payload[key] = {'max_ipv4_users':value}
-        elif(key == 'rad_acct_sg'):
-            payload[key] = {'server_group_name':value}
-        elif(key == 'enable_roaming_rad_acct'):
-            payload[key] = {}
-        elif(key == 'enable_rad_interim_acct'):
-            payload[key] = {}
-        elif(key == 'xml_api_client'):
-            payload[key] = {'xml_api_server':value}
-        elif(key == 'rfc3576_client'):
-            payload[key] = {'rfc3576_server':value}
-        elif(key == 'udr_group'):
-            payload[key] = {'udr_group':value}
-        elif(key == 'wwroam'):
-            payload[key] = {}
-        elif(key == 'devtype_classification'):
-            payload[key] = {}
-        elif(key == 'enforce_dhcp'):
-            payload[key] = {}
-        elif(key == 'integrate_pan'):
-            payload[key] = {}
-        elif(key == 'open_system_rad_acc'):
-            payload[key] = {}
-        elif(key == 'aaa_prof_clone'):
-            payload[key] = {'source':value}
-        else:
-            result_str = f'{key!r} is not a configurable setting for a AAA profile'
+        for key, value in kwargs.items():
+            if(key == 'default_user_role'):
+                payload[key] = {'role': value}
+            elif(key == 'mac_auth_profile'):
+                payload[key] = {'profile-name':value}
+            elif(key == 'mac_auth_profile'):
+                payload[key] = {'profile-name':value}
+            elif(key == 'mac_default_role'):
+                payload[key] = {'default-role':value}
+            elif(key == 'mba_server_group'):
+                payload[key] = {'srv-group':value}
+            elif(key == 'dot1x_auth_profile'):
+                payload[key] = {'profile-name':value}
+            elif(key == 'dot1x_default_role'):
+                payload[key] = {'default-role':value}
+            elif(key == 'dot1x_server_group'):
+                payload[key] = {'srv-group':value}
+            elif(key == 'download_role'):
+                payload[key] = {}
+            elif(key == 'username_from_dhcp_opt12'):
+                payload[key] = {}
+            elif(key == 'l2_auth_fail_through'):
+                payload[key] = {}
+            elif(key == 'multiple_server_accounting'):
+                payload[key] = {}
+            elif(key == 'user_idle_timeout_aaa'):
+                payload[key] = {'seconds':value}
+            elif(key == 'max_ipv4_for_wireless'):
+                payload[key] = {'max_ipv4_users':value}
+            elif(key == 'rad_acct_sg'):
+                payload[key] = {'server_group_name':value}
+            elif(key == 'enable_roaming_rad_acct'):
+                payload[key] = {}
+            elif(key == 'enable_rad_interim_acct'):
+                payload[key] = {}
+            elif(key == 'xml_api_client'):
+                payload[key] = {'xml_api_server':value}
+            elif(key == 'rfc3576_client'):
+                payload[key] = {'rfc3576_server':value}
+            elif(key == 'udr_group'):
+                payload[key] = {'udr_group':value}
+            elif(key == 'wwroam'):
+                payload[key] = {}
+            elif(key == 'devtype_classification'):
+                payload[key] = {}
+            elif(key == 'enforce_dhcp'):
+                payload[key] = {}
+            elif(key == 'integrate_pan'):
+                payload[key] = {}
+            elif(key == 'open_system_rad_acc'):
+                payload[key] = {}
+            elif(key == 'aaa_prof_clone'):
+                payload[key] = {'source':value}
+            else:
+                result_str = f'{key!r} is not a configurable setting for a AAA profile'
+                result = {'result_status': 1, 'result_str': result_str} 
+                return result 
+    elif (action == 'delete'):
+        if (session.api_verbose == True):
+            print(f'Verbose: Checking to see if aaa profile \'{profile_name}\' already exists')
+
+        aaa_profile_list = get_aaa_profiles(session,config_path)
+
+        if not aaa_profile_list:
+            result_str = f'aaa profile \'{profile_name}\' does not exist'
             result = {'result_status': 1, 'result_str': result_str} 
-            return result 
+            return result
+
+        else:
+            for profile in aaa_profile_list:
+                if (profile['profile-name'] == profile_name):
+                    break        
+            else:
+                result_str = f'aaa profile \'{profile_name}\' does not exist'
+                result = {'result_status': 1, 'result_str': result_str} 
+                return result
+    
+        if (session.api_verbose == True):
+            print(f'Verbose: aaa profile \'{profile_name}\' exists')
+    
+
+        payload = {
+            '_action': 'delete',
+            "profile-name": profile_name
+        }
 
     post_url = 'configuration/object/aaa_prof'
 
     if (session.api_verbose == True):
-            print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to add/modify AAA profile \'{profile_name}\'')
-
+        print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to {action} aaa profile \'{profile_name}\'')
+    
     response = session.post(post_url, config_path, payload)
 
     if (response.status_code == 200):
         
         response_json = response.json()
+        
         if (response_json['_global_result']['status'] == 0):
-            result_str = 'AAA profile updated successfully'
+            result_str = f'{action.upper()} aaa profile \'{profile_name}\' - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = 'Unable to update AAA profile'
+            result_str = f'{action.upper()} aaa profile \'{profile_name}\' - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
     else:
-        result_str = 'POST to ' + session.api_url + post_url + ' unsuccessful'
+        result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
         return result
