@@ -521,7 +521,7 @@ def post_cp_auth_profile(session, config_path, action, profile_name, **kwargs):
             elif(key == 'cp_welcome_location_enable'):
                 payload[key] = {}
             elif(key == 'proxy'):
-                payload[key] = {'address':value['address'], 'port':value['port']}
+                payload[key] = {'address':value.get('address'), 'port':value.get('port')}
             elif(key == 'switch_ip_in_redir_url'):
                 payload[key] = {}
             elif(key == 'user_vlan_in_redir_url'):
@@ -597,6 +597,109 @@ def post_cp_auth_profile(session, config_path, action, profile_name, **kwargs):
             return result
         else:
             result_str = f'{action.upper()} captive portal auth profile \'{profile_name}\' - FAILED'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+    else:
+        result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
+
+def get_server_group_profiles(session, config_path):
+    
+    get_url = 'configuration/object/server_group_prof'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending GET to \'{session.api_url}{get_url}\' to retrieve server group profile list')
+    
+    response = session.get(get_url, config_path)
+
+    if (response.status_code == 200):
+        response_json = response.json()
+        if (session.api_verbose == True):
+                print('Verbose: Server group profile list retrieved successfully')
+        return response_json['_data']['server_group_prof']
+    
+    else:
+        if (session.api_verbose == True):
+                print('Verbose: Unable to retrive server group profile list')
+        return None
+
+def post_server_group_profile(session, config_path, action, sg_name, **kwargs):
+    
+    if (action != 'add' and action != 'delete' ):
+        result_str = f'\'{action}\' is not an acceptable API action'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
+
+    if (action == 'add'):
+
+        payload = {
+            '_action': 'add',
+            'sg_name': sg_name
+        }
+    
+        for key, value in kwargs.items():
+            if(key == 'fail_thru'):
+                payload[key] = {}
+            elif(key == 'load_balance'):
+                payload[key] = {}
+            elif(key == 'auth_server'):
+                payload[key] = value.copy()
+            elif(key == 'derivation_rules_vlan_role'):
+                payload[key] = value.copy()
+            elif(key == 'server_group_prof_clone'):
+                payload[key] = {'source':value}
+            else:
+                result_str = f'\'{key}\' is not a configurable setting for a server group profile'
+                result = {'result_status': 1, 'result_str': result_str} 
+                return result 
+
+    elif (action == 'delete'):
+        if (session.api_verbose == True):
+            print(f'Verbose: Checking to see if server group profile \'{sg_name}\' already exists')
+
+        server_group_profile_list = get_server_group_profiles(session,config_path)
+
+        if not server_group_profile_list:
+            result_str = f'server group profile \'{sg_name}\' does not exist'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+
+        else:
+            for profile in server_group_profile_list:
+                if (profile['sg_name'] == sg_name):
+                    break        
+            else:
+                result_str = f'server group profile \'{sg_name}\' does not exist'
+                result = {'result_status': 1, 'result_str': result_str} 
+                return result
+    
+        if (session.api_verbose == True):
+            print(f'Verbose: server group profile \'{sg_name}\' exists')
+    
+
+        payload = {
+            '_action': 'delete',
+            'sg_name': sg_name
+        }
+
+    post_url = 'configuration/object/server_group_prof'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to {action} server group profile \'{sg_name}\'')
+    
+    response = session.post(post_url, config_path, payload)
+
+    if (response.status_code == 200):
+        
+        response_json = response.json()
+        
+        if (response_json['_global_result']['status'] == 0):
+            result_str = f'{action.upper()} server group profile \'{sg_name}\' - SUCCESS'
+            result = {'result_status': 0, 'result_str': result_str} 
+            return result
+        else:
+            result_str = f'{action.upper()} server group profile \'{sg_name}\' - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
     else:
