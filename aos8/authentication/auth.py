@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
 def get_tacacs_server(session, config_path):
-    
+    '''
+
+    '''
     get_url = 'configuration/object/tacacs_server'
 
     if (session.api_verbose == True):
@@ -393,7 +395,7 @@ def post_aaa_profile(session, config_path, action, profile_name, **kwargs):
             elif(key == 'aaa_prof_clone'):
                 payload[key] = {'source':value}
             else:
-                result_str = f'{key!r} is not a configurable setting for a AAA profile'
+                result_str = f'\'{key}\' is not a configurable setting for a AAA profile'
                 result = {'result_status': 1, 'result_str': result_str} 
                 return result 
     elif (action == 'delete'):
@@ -442,6 +444,159 @@ def post_aaa_profile(session, config_path, action, profile_name, **kwargs):
             return result
         else:
             result_str = f'{action.upper()} aaa profile \'{profile_name}\' - FAILED'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+    else:
+        result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
+
+def get_cp_auth_profiles(session, config_path):
+    
+    get_url = 'configuration/object/cp_auth_profile'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending GET to \'{session.api_url}{get_url}\' to retrieve captive portal auth profile list')
+    
+    response = session.get(get_url, config_path)
+
+    if (response.status_code == 200):
+        response_json = response.json()
+        if (session.api_verbose == True):
+                print('Verbose: Captive portal auth profile list retrieved successfully')
+        return response_json['_data']['cp_auth_profile']
+    
+    else:
+        if (session.api_verbose == True):
+                print('Verbose: Unable to retrive captive portal auth profile list')
+        return None
+
+def post_cp_auth_profile(session, config_path, action, profile_name, **kwargs):
+    
+    if (action != 'add' and action != 'delete' ):
+        result_str = f'\'{action}\' is not an acceptable API action'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
+
+    if (action == 'add'):
+
+        payload = {
+            '_action': 'add',
+            'profile-name': profile_name
+        }
+    
+        for key, value in kwargs.items():
+            if(key == 'cp_default_role'):
+                payload[key] = {'default-role': value}
+            elif(key == 'cp_default_guest_role'):
+                payload[key] = {'default-guest-role':value}
+            elif(key == 'cp_server_group'):
+                payload[key] = {'server-group':value}
+            elif(key == 'cp_redirect_pause'):
+                payload[key] = {'redirect-pause':value}
+            elif(key == 'allow_user'):
+                payload[key] = {}
+            elif(key == 'allow_guest'):
+                payload[key] = {}
+            elif(key == 'logout_popup'):
+                payload[key] = {}
+            elif(key == 'cp_proto_http'):
+                payload[key] = {}
+            elif(key == 'cp_min_delay'):
+                payload[key] = {'minimum-delay':value}
+            elif(key == 'cp_max_delay'):
+                payload[key] = {'maximum-delay':value}
+            elif(key == 'cp_load_thresh'):
+                payload[key] = {'cpu-threshold':value}
+            elif(key == 'cp_maxf'):
+                payload[key] = {'max-authentication-failures':value}
+            elif(key == 'cp_show_fqdn'):
+                payload[key] = {}
+            elif(key == 'authentication_method'):
+                payload[key] = {'captive_auth_t':value}
+            elif(key == 'cp_login_location'):
+                payload[key] = {'login-page':value}
+            elif(key == 'cp_welcome_location'):
+                payload[key] = {'welcome-page':value}
+            elif(key == 'cp_welcome_location_enable'):
+                payload[key] = {}
+            elif(key == 'proxy'):
+                payload[key] = {'address':value['address'], 'port':value['port']}
+            elif(key == 'switch_ip_in_redir_url'):
+                payload[key] = {}
+            elif(key == 'user_vlan_in_redir_url'):
+                payload[key] = {}
+            elif(key == 'ip_addr_in_redir_url'):
+                payload[key] = {'ip-addr-in-redirection-url':value}
+            elif(key == 'single_session'):
+                payload[key] = {}
+            elif(key == 'cp_white_list'):
+                payload[key] = {'white-list':value}
+            elif(key == 'cp_black_list'):
+                payload[key] = {'black-list':value}
+            elif(key == 'show_aup'):
+                payload[key] = {}
+            elif(key == 'user_idle_timeout_cp'):
+                payload[key] = {'seconds':value}
+            elif(key == 'cp_redirect_url'):
+                payload[key] = {'redirect-url':value}
+            elif(key == 'apple_cna_bypass'):
+                payload[key] = {}
+            elif(key == 'url_hash_key'):
+                payload[key] = {'url-hash-key':value}
+            elif(key == 'cp_auth_profile_clone'):
+                payload[key] = {'source':value}
+            else:
+                result_str = f'\'{key}\' is not a configurable setting for a captive portal auth profile'
+                result = {'result_status': 1, 'result_str': result_str} 
+                return result 
+
+    elif (action == 'delete'):
+        if (session.api_verbose == True):
+            print(f'Verbose: Checking to see if captive portal auth profile \'{profile_name}\' already exists')
+
+        cp_auth_profile_list = get_cp_auth_profiles(session,config_path)
+
+        if not cp_auth_profile_list:
+            result_str = f'captive portal auth profile \'{profile_name}\' does not exist'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+
+        else:
+            for profile in cp_auth_profile_list:
+                if (profile['profile-name'] == profile_name):
+                    break        
+            else:
+                result_str = f'captive portal auth profile \'{profile_name}\' does not exist'
+                result = {'result_status': 1, 'result_str': result_str} 
+                return result
+    
+        if (session.api_verbose == True):
+            print(f'Verbose: captive portal auth profile \'{profile_name}\' exists')
+    
+
+        payload = {
+            '_action': 'delete',
+            "profile-name": profile_name
+        }
+
+    post_url = 'configuration/object/cp_auth_profile'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to {action} captive portal auth profile \'{profile_name}\'')
+    
+    response = session.post(post_url, config_path, payload)
+
+    if (response.status_code == 200):
+        
+        response_json = response.json()
+        
+        if (response_json['_global_result']['status'] == 0):
+            result_str = f'{action.upper()} captive portal auth profile \'{profile_name}\' - SUCCESS'
+            result = {'result_status': 0, 'result_str': result_str} 
+            return result
+        else:
+            result_str = f'{action.upper()} captive portal auth profile \'{profile_name}\' - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
     else:
