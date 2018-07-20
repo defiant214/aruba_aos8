@@ -644,6 +644,18 @@ def post_server_group_profile(session, config_path, action, sg_name, **kwargs):
             elif(key == 'load_balance'):
                 payload[key] = {}
             elif(key == 'auth_server'):
+                '''
+                Value must be list of dicts in following format:
+                "auth_server": [{
+                    "trim-fqdn": true,
+                    "fqdn": "string",
+                    "all": true,
+                    "operator": "contains",
+                    "sub_string": "string",
+                    "name": "string",
+                    "prio": 0
+                }]
+                '''
                 payload[key] = value.copy()
             elif(key == 'derivation_rules_vlan_role'):
                 payload[key] = value.copy()
@@ -700,6 +712,79 @@ def post_server_group_profile(session, config_path, action, sg_name, **kwargs):
             return result
         else:
             result_str = f'{action.upper()} server group profile \'{sg_name}\' - FAILED'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+    else:
+        result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
+
+def get_tacacs_accounting(session, config_path):
+    
+    get_url = 'configuration/object/tacacs_acc'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending GET to \'{session.api_url}{get_url}\' to retrieve TACACS account configuration')
+    
+    response = session.get(get_url, config_path)
+
+    if (response.status_code == 200):
+        response_json = response.json()
+        if (session.api_verbose == True):
+                print('Verbose: TACACS account configuration retrieved successfully')
+        return response_json['_data']['tacacs_acc']
+    
+    else:
+        if (session.api_verbose == True):
+                print('Verbose: Unable to retrive TACACS account configuration')
+        return None
+
+def post_tacacs_accounting(session, config_path, action, **kwargs):
+    
+    if (action != 'add' ):
+        result_str = f'\'{action}\' is not an acceptable API action'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
+
+    if (action == 'add'):
+
+        payload = {
+            '_action': 'add',
+        }
+    
+        for key, value in kwargs.items():
+            if(key == 'tacacs_acc__sg'):
+                payload[key] = {'sg': value}
+            elif(key == 'tacacs_acc__cfg'):
+                payload[key] = {}
+            elif(key == 'tacacs_acc__action'):
+                payload[key] = {}
+            elif(key == 'tacacs_acc__show'):
+                payload[key] = {}
+            elif(key == 'tacacs_acc__all'):
+                payload[key] = {}
+            else:
+                result_str = f'\'{key}\' is not a configurable setting for TACACS accounting'
+                result = {'result_status': 1, 'result_str': result_str} 
+                return result 
+
+    post_url = 'configuration/object/tacacs_acc'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to {action} TACACS accounting configuration')
+    
+    response = session.post(post_url, config_path, payload)
+
+    if (response.status_code == 200):
+        
+        response_json = response.json()
+        
+        if (response_json['_global_result']['status'] == 0):
+            result_str = f'{action.upper()} TACACS accounting configuration - SUCCESS'
+            result = {'result_status': 0, 'result_str': result_str} 
+            return result
+        else:
+            result_str = f'{action.upper()} TACACS accounting configuration - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
     else:
