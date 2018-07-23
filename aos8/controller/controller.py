@@ -459,3 +459,72 @@ def post_hostname(session, config_path, hostname):
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
         return result
+
+def get_masterip(session, config_path):
+
+    get_url = 'configuration/object/masterip'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending GET to \'{session.api_url}{get_url}\' to retrieve masterip configuration')
+    
+    response = session.get(get_url, config_path)
+
+    if (response.status_code == 200):
+        response_json = response.json()
+        if (session.api_verbose == True):
+                print('Verbose: masterip configuration retrieved successfully')
+        return response_json['_data']['masterip']
+    
+    else:
+        if (session.api_verbose == True):
+                print('Verbose: Unable to retrieve masterip configuration')
+        return None
+
+def post_masterip(session, config_path, masterip_val, **kwargs):
+    
+    payload = {
+        '_action': 'add',
+        'masterip_val': masterip_val
+    }
+    
+    for key, value in kwargs.items():
+        if(key == 'key'):
+            payload[key] = value
+        elif(key == 'id'):
+            payload[key] = value
+        elif(key == 'local-fqdn'):
+            payload[key] = value
+        elif(key == 'peer-mac-1' and value == True):
+            payload[key] = value
+        elif(key == 'peermac-1'):
+            payload[key] = value
+        elif(key == 'peermac-2'):
+            payload[key] = value
+        else:
+            result_str = f'\'{key}\' is not a configurable setting for a SNMP v2c host'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result 
+
+    post_url = 'configuration/object/masterip'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to add masterip \'{masterip_val}\'')
+    
+    response = session.post(post_url, config_path, payload)
+
+    if (response.status_code == 200):
+        
+        response_json = response.json()
+        
+        if (response_json['_global_result']['status'] == 0):
+            result_str = f'Add masterip \'{masterip_val}\' - SUCCESS'
+            result = {'result_status': 0, 'result_str': result_str} 
+            return result
+        else:
+            result_str = f'Add masterip \'{masterip_val}\' - FAILED'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+    else:
+        result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
