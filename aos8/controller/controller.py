@@ -528,3 +528,69 @@ def post_masterip(session, config_path, masterip_val, **kwargs):
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
         return result
+
+def get_controller_ip(session, config_path):
+
+    get_url = 'configuration/object/ctrl_ip'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending GET to \'{session.api_url}{get_url}\' to retrieve controller IP')
+    
+    response = session.get(get_url, config_path)
+
+    if (response.status_code == 200):
+        response_json = response.json()
+        if (session.api_verbose == True):
+                print('Verbose: controller IP retrieved successfully')
+        return response_json['_data']['ctrl_ip']
+    
+    else:
+        if (session.api_verbose == True):
+                print('Verbose: Unable to retrieve controller IP')
+        return None
+
+def post_controller_ip(session, config_path, **kwargs):
+    
+    payload = {
+        '_action': 'add',
+    }
+    
+    if not kwargs:
+        result_str = 'Controller IP must be configured with either interface VLAN or loopback interface.'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result 
+
+    for key, value in kwargs.items():
+        if(key == 'id'):
+            payload[key] = value
+            break
+        elif(key == 'loopback' and value == True):
+            payload[key] = value
+        else:
+            result_str = 'Controller IP must be configured with either interface VLAN or loopback interface.'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result 
+
+    post_url = 'configuration/object/ctrl_ip'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to add controller IP')
+    
+    response = session.post(post_url, config_path, payload)
+
+    if (response.status_code == 200):
+        
+        response_json = response.json()
+        
+        if (response_json['_global_result']['status'] == 0):
+            result_str = f'Add controller IP - SUCCESS'
+            result = {'result_status': 0, 'result_str': result_str} 
+            return result
+        else:
+            result_str = f'Add controller IP - FAILED'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+    else:
+        result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
