@@ -85,11 +85,13 @@ def check_if_node_exists(config_path, parsed_node_hierarchy):
 
 def post_configuration_node(session, node_path, action):
     
+    # Only allow Add or Delete API action
     if (action != 'add' and action != 'delete' ):
         result_str = f'\'{action}\' is not an acceptable API action'
         result = {'result_status': 1, 'result_str': result_str} 
         return result
     
+    # Check to see if node already exists
     node_hierarchy = get_node_hierarchy(session)
     parsed_node_hierarchy = parse_node_hierarchy(node_hierarchy)
 
@@ -124,6 +126,7 @@ def post_configuration_node(session, node_path, action):
     if (session.api_verbose == True):
         print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to {action} node \'{node_path}\'')
     
+    # Send POST to API Session
     response = session.post(post_url, '/md', payload)
 
     if (response.status_code == 200):
