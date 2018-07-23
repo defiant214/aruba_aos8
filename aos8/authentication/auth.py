@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 
 def get_tacacs_server(session, config_path):
-    '''
 
-    '''
     get_url = 'configuration/object/tacacs_server'
 
     if (session.api_verbose == True):
@@ -19,7 +17,7 @@ def get_tacacs_server(session, config_path):
     
     else:
         if (session.api_verbose == True):
-                print('Verbose: Unable to retrive TACACS server')
+                print('Verbose: Unable to retrive TACACS server list')
         return None
 
 def post_tacacs_server(session, config_path, action, tacacs_server_name, **kwargs):
@@ -52,7 +50,7 @@ def post_tacacs_server(session, config_path, action, tacacs_server_name, **kwarg
             elif(key == 'tacacs_authorization'):
                 payload[key] = {}
             elif(key == 'tac_srcvlan_ip6addr'):
-                payload[key] = {'ipv6addr': value['ipv6addr'], 'vlanid': value['vlanid']}
+                payload[key] = {'ipv6addr': value.get('ipv6addr'), 'vlanid': value.get('vlanid')}
             elif(key == 'tacacs_server_clone'):
                 payload[key] = {'source': value}
             else:
@@ -131,7 +129,7 @@ def get_dot1X_auth_profiles(session, config_path):
                 print('Verbose: Unable to retrive Dot1X auth profile list')
         return None
 
-def post_dot1x_auth_profile(session, config_path, action, profile_name, **kwargs):
+def post_dot1X_auth_profile(session, config_path, action, profile_name, **kwargs):
 
     if (action != 'add' and action != 'delete' ):
         result_str = f'\'{action}\' is not an acceptable API action'
@@ -513,7 +511,12 @@ def post_cp_auth_profile(session, config_path, action, profile_name, **kwargs):
             elif(key == 'cp_show_fqdn'):
                 payload[key] = {}
             elif(key == 'authentication_method'):
-                payload[key] = {'captive_auth_t':value}
+                if (value == 'PAP' or value == 'MSCHAPv2' or value == 'chap'):                 
+                    payload[key] = {'captive_auth_t':value}
+                else:
+                    result_str = f'\'{value}\' is not a configurable option for the {key} attribute in the captive portal auth profile'
+                    result = {'result_status': 1, 'result_str': result_str} 
+                    return result 
             elif(key == 'cp_login_location'):
                 payload[key] = {'login-page':value}
             elif(key == 'cp_welcome_location'):
@@ -859,6 +862,270 @@ def post_radius_nas_ip(session, config_path, action, **kwargs):
             return result
         else:
             result_str = f'{action.upper()} RADIUS NAS IP address - FAILED'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+    else:
+        result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
+
+def get_mac_auth_profiles(session, config_path):
+    get_url = 'configuration/object/mac_auth_profile'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending GET to \'{session.api_url}{get_url}\' to retrieve MAC auth profile list')
+    
+    response = session.get(get_url, config_path)
+
+    if (response.status_code == 200):
+        response_json = response.json()
+        if (session.api_verbose == True):
+                print('Verbose: MAC auth profile list retrieved successfully')
+        return response_json['_data']['mac_auth_profile']
+    
+    else:
+        if (session.api_verbose == True):
+                print('Verbose: Unable to retrive MAC auth profile list')
+        return None
+
+def post_mac_auth_profile(session, config_path, action, profile_name, **kwargs):
+
+    if (action != 'add' and action != 'delete' ):
+        result_str = f'\'{action}\' is not an acceptable API action'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
+
+    if (action == 'add'):
+
+        payload = {
+            '_action': 'add',
+            'profile-name': profile_name
+        } 
+    
+        for key, value in kwargs.items():
+            if(key == 'mba_fmt'):
+                if (value == 'none' or value == 'colon' or value == 'dash' or value == 'oui-nic'):
+                    payload[key] = {'mba_delimiter_t': value}
+                else:
+                    result_str = f'\'{value}\' is not a configurable option for the {key} attribute in the MAC auth profile'
+                    result = {'result_status': 1, 'result_str': result_str} 
+                    return result 
+            elif(key == 'mba_case'):
+                if (value == 'lower' or value == 'upper'):
+                    payload[key] = {'mba_case_t': value}
+                else:
+                    result_str = f'\'{value}\' is not a configurable option for the {key} attribute in the MAC auth profile'
+                    result = {'result_status': 1, 'result_str': result_str} 
+                    return result 
+            elif(key == 'mba_maxf'):
+                payload[key] = {'max-authentication-failures': value}
+            elif(key == 'mac_reauthentication'):
+                payload[key] = {}
+            elif(key == 'mac_reauth_period'):
+                payload[key] = {'ra-period': value}
+            elif(key == 'mac_use_server_reauth_period'):
+                payload[key] = {}
+            elif(key == 'mac_auth_profile_clone'):
+                payload[key] = {'source': value}
+            else:
+                result_str = f'\'{key}\' is not a configurable setting for the MAC auth profile'
+                result = {'result_status': 1, 'result_str': result_str} 
+                return result 
+
+    elif (action == 'delete'):
+        if (session.api_verbose == True):
+            print(f'Verbose: Checking to see if MAC auth profile \'{profile_name}\' already exists')
+
+        mac_auth_profile_list = get_mac_auth_profiles(session,config_path)
+
+        if not mac_auth_profile_list:
+            result_str = f'MAC auth profile \'{profile_name}\' does not exist'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+
+        else:
+            for profile in mac_auth_profile_list:
+                if (profile['profile-name'] == profile_name):
+                    break        
+            else:
+                result_str = f'MAC auth profile \'{profile_name}\' does not exist'
+                result = {'result_status': 1, 'result_str': result_str} 
+                return result
+    
+        if (session.api_verbose == True):
+            print(f'Verbose: MAC auth profile \'{profile_name}\' exists')
+    
+
+        payload = {
+            '_action': 'delete',
+            "profile-name": profile_name
+        }
+    
+    post_url = 'configuration/object/mac_auth_profile'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to {action} MAC auth profile \'{profile_name}\'')
+    
+    response = session.post(post_url, config_path, payload)
+
+    if (response.status_code == 200):
+        
+        response_json = response.json()
+        
+        if (response_json['_global_result']['status'] == 0):
+            result_str = f'{action.upper()} MAC auth profile \'{profile_name}\' - SUCCESS'
+            result = {'result_status': 0, 'result_str': result_str} 
+            return result
+        else:
+            result_str = f'{action.upper()} MAC auth profile \'{profile_name}\' - FAILED'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+    else:
+        result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
+
+def get_radius_servers(session, config_path):
+
+    get_url = 'configuration/object/rad_server'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending GET to \'{session.api_url}{get_url}\' to retrieve RADIUS server list')
+    
+    response = session.get(get_url, config_path)
+
+    if (response.status_code == 200):
+        response_json = response.json()
+        if (session.api_verbose == True):
+                print('Verbose: RADIUS server list retrieved successfully')
+        return response_json['_data']['rad_server']
+    
+    else:
+        if (session.api_verbose == True):
+                print('Verbose: Unable to retrive RADIUS server list')
+        return None
+
+def post_radius_server(session, config_path, action, rad_server_name, **kwargs):
+    
+    if ( action != 'add' and action != 'delete' ):
+        result_str = f'\'{action}\' is not an acceptable API action'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
+    
+    if (action == 'add'):
+        
+        payload = {
+        '_action': 'add',
+        'rad_server_name': rad_server_name
+        }
+    
+        for key, value in kwargs.items():
+            if(key == 'ipv6_enable'):
+                payload[key] = {}
+            elif(key == 'rad_host'):
+                payload[key] = {'host': value}
+            elif(key == 'rad_key'):
+                payload[key] = {'key': value}
+            elif(key == 'cppm_username_password'):
+                payload[key] = {'cppm_username': value.get('cppm_username'), 'cppm_password': value.get('cppm_password')}
+            elif(key == 'rad_authport'):
+                payload[key] = {'authport': value}
+            elif(key == 'rad_acctport'):
+                payload[key] = {'acctport': value}
+            elif(key == 'radsec_port'):
+                payload[key] = {'radsec-port': value}
+            elif(key == 'rad_retransmit'):
+                payload[key] = {'retransmit': value}
+            elif(key == 'rad_timeout'):
+                payload[key] = {'timeout': value}
+            elif(key == 'rad_nasid'):
+                payload[key] = {'nas-identifier': value}
+            elif(key == 'rad_nasip'):
+                payload[key] = {'nas-ip': value}
+            elif(key == 'rad_nasip6'):
+                payload[key] = {'nas-ip6': value}
+            elif(key == 'rad_srcvlan_ip6addr'):
+                if value.get('ipv6addr'):                 
+                    payload[key] = {'ipv6addr': value.get('ipv6addr')}
+                elif value.get('vlanid'):
+                    payload[key] = {'vlanid': value.get('vlanid')}
+            elif(key == 'use_md5'):
+                payload[key] = {}
+            elif(key == 'calling_station_use_ip'):
+                payload[key] = {}
+            elif(key == 'rad_mode'):
+                payload[key] = {}
+            elif(key == 'rad_mac_lowercase'):
+                payload[key] = {}
+            elif(key == 'rad_mac_delimiter'):
+                if (value == 'none' or value == 'colon' or value == 'dash' or value == 'oui-nic'):
+                    payload[key] = {'mba_delimiter_t': value}
+            elif(key == 'rad_service_type_framed_user'):
+                payload[key] = {}
+            elif(key == 'radsec_enable'):
+                payload[key] = {}
+            elif(key == 'radsec_ca_cert'):
+                payload[key] = {'radsec-trusted-cacert-name': value}
+            elif(key == 'radsec_server_cert'):
+                payload[key] = {'radsec-trusted-servercert-name': value}
+            elif(key == 'radsec_client_cert'):
+                payload[key] = {'radsec-client-cert': value}
+            elif(key == 'rad_req_mod_auth'):
+                payload[key] = {'profile-name': value}
+            elif(key == 'rad_req_mod_acct'):
+                payload[key] = {'profile-name': value}
+            elif(key == 'rad_server_clone'):
+                payload[key] = {'source': value}
+            else:
+                result_str = f'\'{key}\' is not a configurable setting for the RADIUS server profile'
+                result = {'result_status': 1, 'result_str': result_str} 
+                return result 
+
+    elif (action == 'delete'):
+        if (session.api_verbose == True):
+            print(f'Verbose: Checking to see if RADIUS server \'{rad_server_name}\' already exists')
+
+        radius_server_list = get_radius_servers(session,config_path)
+
+        if not radius_server_list:
+            result_str = f'RADIUS Server \'{rad_server_name}\' does not exist'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+
+        else:
+            for server in radius_server_list:
+                if (server['rad_server_name'] == rad_server_name):
+                    break        
+            else:
+                result_str = f'RADIUS Server \'{rad_server_name}\' does not exist'
+                result = {'result_status': 1, 'result_str': result_str} 
+                return result
+    
+        if (session.api_verbose == True):
+            print(f'Verbose: RADIUS Server \'{rad_server_name}\' exists')
+    
+
+        payload = {
+            '_action': 'delete',
+            "rad_server_name": rad_server_name
+        }
+    post_url = 'configuration/object/rad_server'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to {action} RADIUS server \'{rad_server_name}\'')
+    
+    response = session.post(post_url, config_path, payload)
+
+    if (response.status_code == 200):
+        
+        response_json = response.json()
+        
+        if (response_json['_global_result']['status'] == 0):
+            result_str = f'{action.upper()} RADIUS server \'{rad_server_name}\' - SUCCESS'
+            result = {'result_status': 0, 'result_str': result_str} 
+            return result
+        else:
+            result_str = f'{action.upper()} RADIUS server \'{rad_server_name}\' - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
     else:
