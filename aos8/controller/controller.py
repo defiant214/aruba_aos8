@@ -1749,3 +1749,38 @@ def post_location(session, config_path, switch_location=" "):
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
         return result
+
+def post_copy_flash_ftp(session, config_path, ftp_host, ftp_user, ftp_password, srcfilename, dstfilename, remote_dir=''):
+
+    payload = {
+        'ftphost': ftp_host,
+        'user': ftp_user,
+        'passwd': ftp_password,
+        'srcfilename': srcfilename,
+        'destfilename': dstfilename,
+        'remote-dir': remote_dir
+    }
+
+    post_url = 'configuration/object/copy_flash_ftp'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to copy flash:{srcfilename} to FTP server')
+    
+    response = session.post(post_url, config_path, payload)
+
+    if (response.status_code == 200):
+        
+        response_json = response.json()
+        
+        if (response_json['_global_result']['status'] == 0):
+            result_str = f'Copy flash:{srcfilename} to FTP server - SUCCESS'
+            result = {'result_status': 0, 'result_str': result_str} 
+            return result
+        else:
+            result_str = f'Copy flash:{srcfilename} to FTP server - FAILED'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+    else:
+        result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
