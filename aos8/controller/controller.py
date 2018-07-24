@@ -1634,3 +1634,35 @@ def post_secmasterip(session, config_path, secmasterip_val, **kwargs):
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
         return result
+
+def post_copy_flash_tftp(session, config_path, tftp_host, srcfilename, dstfilename):
+
+    payload = {
+        'tftphost': tftp_host,
+        'srcfilename': srcfilename,
+        'destfilename': dstfilename
+        }
+
+    post_url = 'configuration/object/copy_flash_tftp'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to copy flash:{srcfilename} to TFTP server')
+    
+    response = session.post(post_url, config_path, payload)
+
+    if (response.status_code == 200):
+        
+        response_json = response.json()
+        
+        if (response_json['_global_result']['status'] == 0):
+            result_str = f'copy flash:{srcfilename} to TFTP server - SUCCESS'
+            result = {'result_status': 0, 'result_str': result_str} 
+            return result
+        else:
+            result_str = f'copy flash:{srcfilename} to TFTP server - FAILED'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+    else:
+        result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
