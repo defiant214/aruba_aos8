@@ -1533,3 +1533,35 @@ def post_copy_running_ftp(session, config_path, ftp_host, ftp_user, ftp_password
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
         return result
+
+def post_rename_file(session, config_path, filename, newfilename):
+
+    payload = {
+        'filename': filename,
+        'newfilename': newfilename
+    }
+
+    post_url = 'configuration/object/rename_file'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to rename file {filename} to {newfilename}')
+    
+    response = session.post(post_url, config_path, payload)
+
+    if (response.status_code == 200):
+        
+        response_json = response.json()
+        
+        if (response_json['_global_result']['status'] == 0):
+            result_str = f'Rename file {filename} to {newfilename} - SUCCESS'
+            result = {'result_status': 0, 'result_str': result_str} 
+            return result
+        else:
+            result_str = f'Rename file {filename} to {newfilename} - SUCCESS'
+            result_str = f'Copy running-config to FTP server - FAILED'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+    else:
+        result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
