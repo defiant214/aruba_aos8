@@ -903,3 +903,67 @@ def post_copy_scp_flash(session, config_path, scp_host, scp_username, scp_passwo
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
         return result
+
+def get_clock_set_timezone(session, config_path):
+
+    get_url = 'configuration/object/clock_set_timezone'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending GET to \'{session.api_url}{get_url}\' to retrieve timezone')
+    
+    response = session.get(get_url, config_path)
+
+    if (response.status_code == 200):
+        response_json = response.json()
+        if (session.api_verbose == True):
+                print('Verbose: Timezone retrieved successfully')
+        return response_json['_data']['clock_set_timezone']
+    
+    else:
+        if (session.api_verbose == True):
+                print('Verbose: Unable to retrieve timezone')
+        return None
+
+def post_clock_set_timezone(session, config_path, action, timezone):
+    
+    if ( action != 'add' and action != 'delete' ):
+        result_str = f'\'{action}\' is not an acceptable API action'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
+    
+    if (action == 'add'):
+        
+        payload = {
+        '_action': 'add',
+        'name': timezone
+        }
+    
+    elif (action == 'delete'):
+
+        payload = {
+        '_action': 'delete'
+        }
+
+    post_url = 'configuration/object/clock_set_timezone'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to {action} timezone \'{timezone}\'')
+    
+    response = session.post(post_url, config_path, payload)
+
+    if (response.status_code == 200):
+        
+        response_json = response.json()
+        
+        if (response_json['_global_result']['status'] == 0):
+            result_str = f'{action.upper()} timezone \'{timezone}\' - SUCCESS'
+            result = {'result_status': 0, 'result_str': result_str} 
+            return result
+        else:
+            result_str = f'{action.upper()} timezone \'{timezone}\' - FAILED'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+    else:
+        result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
