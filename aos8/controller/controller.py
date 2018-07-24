@@ -1499,3 +1499,37 @@ def post_ip_name_server(session, config_path, action, name_server_ip):
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
         return result
+
+def post_copy_running_ftp(session, config_path, ftp_host, ftp_user, ftp_password, filename, remote_dir=''):
+
+    payload = {
+        'ftphost': ftp_host,
+        'user': ftp_user,
+        'passwd': ftp_password,
+        'filename': filename,
+        'remote-dir': remote_dir
+        }
+
+    post_url = 'configuration/object/copy_running_ftp_passwd'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to copy running-config to FTP server')
+    
+    response = session.post(post_url, config_path, payload)
+
+    if (response.status_code == 200):
+        
+        response_json = response.json()
+        
+        if (response_json['_global_result']['status'] == 0):
+            result_str = f'Copy running-config to FTP server - SUCCESS'
+            result = {'result_status': 0, 'result_str': result_str} 
+            return result
+        else:
+            result_str = f'Copy running-config to FTP server - FAILED'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+    else:
+        result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
