@@ -967,3 +967,99 @@ def post_clock_set_timezone(session, config_path, action, timezone):
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
         return result
+
+def get_ntp_server_info(session, config_path):
+
+    get_url = 'configuration/object/ntp_server_info'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending GET to \'{session.api_url}{get_url}\' to retrieve NTP server list')
+    
+    response = session.get(get_url, config_path)
+
+    if (response.status_code == 200):
+        response_json = response.json()
+        if (session.api_verbose == True):
+                print('Verbose: NTP server list retrieved successfully')
+        return response_json['_data']['ntp_server_info']
+    
+    else:
+        if (session.api_verbose == True):
+                print('Verbose: Unable to retrieve NTP server list')
+        return None
+
+def post_ntp_server_info(session, config_path, action, ntp_server_ip, **kwargs):
+    
+    if ( action != 'add' and action != 'delete' ):
+        result_str = f'\'{action}\' is not an acceptable API action'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
+    
+    if (action == 'add'):
+        
+        payload = {
+        '_action': 'add',
+        'ip': ntp_server_ip
+        }
+    
+        for key, value in kwargs.items():
+            if(key == 'keyid'):
+                payload[key] = value
+            elif(key == 'iburst'):
+                payload[key] = value
+            else:
+                result_str = f'\'{key}\' is not a configurable setting for a NTP server'
+                result = {'result_status': 1, 'result_str': result_str} 
+                return result 
+
+    elif (action == 'delete'):
+        if (session.api_verbose == True):
+            print(f'Verbose: Checking to see if NTP server \'{ntp_server_ip}\' already exists')
+
+        ntp_server_list = get_ntp_server_info(session,config_path)
+
+        payload = {
+        '_action': 'delete',
+        'ip': ntp_server_ip
+        }
+
+        if not ntp_server_list:
+            result_str = f'NTP server \'{ntp_server_ip}\' does not exist'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+
+        else:
+            for server in ntp_server_list:
+                if (server['ip'] == ntp_server_ip):
+                    break        
+            else:
+                result_str = f'NTP server \'{ntp_server_ip}\' does not exist'
+                result = {'result_status': 1, 'result_str': result_str} 
+                return result
+    
+        if (session.api_verbose == True):
+            print(f'Verbose: NTP server \'{ntp_server_ip}\' exists')
+    
+    post_url = 'configuration/object/ntp_server_info'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to {action} NTP server \'{ntp_server_ip}\'')
+    
+    response = session.post(post_url, config_path, payload)
+
+    if (response.status_code == 200):
+        
+        response_json = response.json()
+        
+        if (response_json['_global_result']['status'] == 0):
+            result_str = f'{action.upper()} NTP server \'{ntp_server_ip}\' - SUCCESS'
+            result = {'result_status': 0, 'result_str': result_str} 
+            return result
+        else:
+            result_str = f'{action.upper()} NTP server \'{ntp_server_ip}\' - FAILED'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+    else:
+        result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
