@@ -1698,3 +1698,54 @@ def post_copy_tftp_system(session, config_path, partition_num, tftp_host, filena
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
         return result
+
+def get_location(session, config_path):
+
+    get_url = 'configuration/object/location'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending GET to \'{session.api_url}{get_url}\' to retrieve switch location')
+    
+    response = session.get(get_url, config_path)
+
+    if (response.status_code == 200):
+        response_json = response.json()
+        if (session.api_verbose == True):
+                print('Verbose: Switch location retrieved successfully')
+        return response_json['_data']['location']
+    
+    else:
+        if (session.api_verbose == True):
+                print('Verbose: Unable to retrieve switch location')
+        return None
+
+def post_location(session, config_path, switch_location=" "):
+    
+    payload = {
+        '_action': 'add',
+        'switchlocation': switch_location
+        }
+    
+    post_url = 'configuration/object/location'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to add switch location')
+    
+    response = session.post(post_url, config_path, payload)
+
+    if (response.status_code == 200):
+        
+        response_json = response.json()
+        
+        if (response_json['_global_result']['status'] == 0):
+            result_str = f'Add switch location - SUCCESS'
+            result = {'result_status': 0, 'result_str': result_str} 
+            return result
+        else:
+            result_str = f'Add switch location - FAILED'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+    else:
+        result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
