@@ -1355,3 +1355,82 @@ def post_copy_tftp_flash(session, config_path, tftp_host, srcfilename, dstfilena
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
         return result
+
+def get_ntp_source(session, config_path):
+
+    get_url = 'configuration/object/ntp_source'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending GET to \'{session.api_url}{get_url}\' to retrieve NTP source interface')
+    
+    response = session.get(get_url, config_path)
+
+    if (response.status_code == 200):
+        response_json = response.json()
+        if (session.api_verbose == True):
+                print('Verbose: NTP source interface retrieved successfully')
+        return response_json['_data']['ntp_source']
+    
+    else:
+        if (session.api_verbose == True):
+                print('Verbose: Unable to retrieve NTP source interface')
+        return None
+
+def post_ntp_source(session, config_path, action, **kwargs):
+    
+    if ( action != 'add' and action != 'delete' ):
+        result_str = f'\'{action}\' is not an acceptable API action'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
+
+    if (action == 'add'):
+    
+        payload = {
+            '_action': 'add',
+        }  
+    
+        if not kwargs:
+            result_str = 'NTP source interface must be configured with either interface VLAN or loopback interface.'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result 
+
+        for key, value in kwargs.items():
+            if(key == 'vlanid'):
+                payload[key] = value
+                break
+            elif(key == 'loopback' and value == True):
+                payload[key] = value
+            else:
+                result_str = 'NTP source interface must be configured with either interface VLAN or loopback interface.'
+                result = {'result_status': 1, 'result_str': result_str} 
+                return result 
+
+    elif (action == 'delete'):
+        
+        payload = {
+            '_action': 'delete',
+        } 
+
+    post_url = 'configuration/object/ntp_source'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to {action} NTP source interface')
+    
+    response = session.post(post_url, config_path, payload)
+
+    if (response.status_code == 200):
+        
+        response_json = response.json()
+        
+        if (response_json['_global_result']['status'] == 0):
+            result_str = f'{action.upper()} NTP source interface - SUCCESS'
+            result = {'result_status': 0, 'result_str': result_str} 
+            return result
+        else:
+            result_str = f'{action.upper()} NTP source interface - FAILED'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+    else:
+        result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
