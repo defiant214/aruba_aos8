@@ -659,3 +659,114 @@ def post_snmp_server_community(session, config_path, action, snmp_community_stri
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
         return result
+
+def get_snmp_server_host_snmpv3(session, config_path):
+
+    get_url = 'configuration/object/snmp_ser_host_snmpv3'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending GET to \'{session.api_url}{get_url}\' to retrieve SNMP v3 host list')
+    
+    response = session.get(get_url, config_path)
+
+    if (response.status_code == 200):
+        response_json = response.json()
+        if (session.api_verbose == True):
+                print('Verbose: SNMP v3 host list retrieved successfully')
+        return response_json['_data']['snmp_ser_host_snmpv3']
+    
+    else:
+        if (session.api_verbose == True):
+                print('Verbose: Unable to retrieve SNMP v3 host list')
+        return None
+
+def post_snmp_server_host_snmpv3(session, config_path, action, snmp_host_ip, snmp_host_name, **kwargs):
+    
+    if ( action != 'add' and action != 'delete' ):
+        result_str = f'\'{action}\' is not an acceptable API action'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
+    
+    if (action == 'add'):
+        
+        payload = {
+        '_action': 'add',
+        'ipAddress': snmp_host_ip,
+        'name': snmp_host_name
+        }
+
+        if (kwargs.get('inform') == False and not kwargs.get('engineid')):
+            result_str = f'SNMP engine ID must be supplied when not using informs'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result 
+    
+        for key, value in kwargs.items():
+            if(key == 'portnumber'):
+                payload[key] = value
+            elif(key == 'inform'):
+                payload[key] = value
+            elif(key == 'secs'):
+                payload[key] = value
+            elif(key == 'count'):
+                payload[key] = value
+            elif(key == 'engineid'):
+                payload[key] = value
+            else:
+                result_str = f'\'{key}\' is not a configurable setting for a SNMP v3 host'
+                result = {'result_status': 1, 'result_str': result_str} 
+                return result 
+
+    elif (action == 'delete'):
+        if (session.api_verbose == True):
+            print(f'Verbose: Checking to see if SNMP v3 host \'{snmp_host_ip}\' already exists')
+
+        snmp_server_v3_host_list = get_snmp_server_host_snmpv3(session,config_path)
+
+        payload = {
+        '_action': 'delete',
+        'ipAddress': snmp_host_ip,
+        'name': snmp_host_name
+        }
+
+        if not snmp_server_v3_host_list:
+            result_str = f'SNMP v3 host \'{snmp_host_ip}\' does not exist'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+
+        else:
+            for host in snmp_server_v3_host_list:
+                if (host['ipAddress'] == snmp_host_ip):
+                    if host.get('portnumber'):
+                        payload['portnumber'] = host.get('portnumber')
+                    break        
+            else:
+                result_str = f'SNMP v3 host \'{snmp_host_ip}\' does not exist'
+                result = {'result_status': 1, 'result_str': result_str} 
+                return result
+    
+        if (session.api_verbose == True):
+            print(f'Verbose: SNMP v3 host \'{snmp_host_ip}\' exists')
+    
+    post_url = 'configuration/object/snmp_ser_host_snmpv3'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to {action} SNMP v3 host \'{snmp_host_ip}\'')
+    
+    response = session.post(post_url, config_path, payload)
+
+    if (response.status_code == 200):
+        
+        response_json = response.json()
+        
+        if (response_json['_global_result']['status'] == 0):
+            result_str = f'{action.upper()} SNMP v3 host \'{snmp_host_ip}\' - SUCCESS'
+            result = {'result_status': 0, 'result_str': result_str} 
+            return result
+        else:
+            result_str = f'{action.upper()} SNMP v3 host \'{snmp_host_ip}\' - FAILED'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+    else:
+        result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
