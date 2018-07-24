@@ -1128,3 +1128,37 @@ def post_snmp_server_trap_enable(session, config_path, action, snmp_trap_name):
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
         return result
+
+def post_copy_scp_system(session, config_path, partition_num, scp_host, scp_user, scp_password, filename):
+
+    payload = {
+        'partition_num': partition_num,
+        'scphost': scp_host,
+        'username': scp_user,
+        'filename': filename,
+        'passwd': scp_password
+        }
+
+    post_url = 'configuration/object/copy_scp_system'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to SCP image to system partition {partition_num}')
+    
+    response = session.post(post_url, config_path, payload)
+
+    if (response.status_code == 200):
+        
+        response_json = response.json()
+        
+        if (response_json['_global_result']['status'] == 0):
+            result_str = f'SCP image to system partition {partition_num} - SUCCESS'
+            result = {'result_status': 0, 'result_str': result_str} 
+            return result
+        else:
+            result_str = f'SCP image to system partition {partition_num} - FAILED'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+    else:
+        result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
