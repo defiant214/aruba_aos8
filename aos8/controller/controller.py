@@ -1323,3 +1323,35 @@ def post_syslocation(session, config_path, syslocation=" "):
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
         return result
+
+def post_copy_tftp_flash(session, config_path, tftp_host, srcfilename, dstfilename):
+
+    payload = {
+        'tftphost': tftp_host,
+        'filename': srcfilename,
+        'destfilename': dstfilename
+        }
+
+    post_url = 'configuration/object/copy_tftp_flash'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to copy tftp:/{srcfilename} to flash')
+    
+    response = session.post(post_url, config_path, payload)
+
+    if (response.status_code == 200):
+        
+        response_json = response.json()
+        
+        if (response_json['_global_result']['status'] == 0):
+            result_str = f'copy tftp:/{srcfilename} to flash - SUCCESS'
+            result = {'result_status': 0, 'result_str': result_str} 
+            return result
+        else:
+            result_str = f'copy tftp:/{srcfilename} to flash - FAILED'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+    else:
+        result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
