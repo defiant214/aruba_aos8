@@ -594,3 +594,68 @@ def post_controller_ip(session, config_path, **kwargs):
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
         return result
+
+def get_snmp_server_community(session, config_path):
+
+    get_url = 'configuration/object/snmp_ser_community'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending GET to \'{session.api_url}{get_url}\' to retrieve SNMP community string')
+    
+    response = session.get(get_url, config_path)
+
+    if (response.status_code == 200):
+        response_json = response.json()
+        if (session.api_verbose == True):
+                print('Verbose: SNMP community string retrieved successfully')
+        return response_json['_data']['snmp_ser_community']
+    
+    else:
+        if (session.api_verbose == True):
+                print('Verbose: Unable to retrieve SNMP community string')
+        return None
+
+def post_snmp_server_community(session, config_path, action, snmp_community_string):
+    
+    if ( action != 'add' and action != 'delete' ):
+        result_str = f'\'{action}\' is not an acceptable API action'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
+    
+    if (action == 'add'):
+        
+        payload = {
+        '_action': 'add',
+        'name': snmp_community_string
+        }
+    
+    elif (action == 'delete'):
+
+        payload = {
+        '_action': 'delete',
+        'name': snmp_community_string
+        }
+
+    post_url = 'configuration/object/snmp_ser_community'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to {action} SNMP community string \'{snmp_community_string}\'')
+    
+    response = session.post(post_url, config_path, payload)
+
+    if (response.status_code == 200):
+        
+        response_json = response.json()
+        
+        if (response_json['_global_result']['status'] == 0):
+            result_str = f'{action.upper()} SNMP community string \'{snmp_community_string}\' - SUCCESS'
+            result = {'result_status': 0, 'result_str': result_str} 
+            return result
+        else:
+            result_str = f'{action.upper()} SNMP community string \'{snmp_community_string}\' - FAILED'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+    else:
+        result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
