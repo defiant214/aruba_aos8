@@ -1162,3 +1162,113 @@ def post_copy_scp_system(session, config_path, partition_num, scp_host, scp_user
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
         return result
+
+def get_snmp_server_user(session, config_path):
+
+    get_url = 'configuration/object/snmp_ser_user'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending GET to \'{session.api_url}{get_url}\' to retrieve SNMP user list')
+    
+    response = session.get(get_url, config_path)
+
+    if (response.status_code == 200):
+        response_json = response.json()
+        if (session.api_verbose == True):
+                print('Verbose: SNMP user list retrieved successfully')
+        return response_json['_data']['snmp_ser_user']
+    
+    else:
+        if (session.api_verbose == True):
+                print('Verbose: Unable to retrieve SNMP user list')
+        return None
+
+def post_snmp_server_user(session, config_path, action, snmp_user_name, **kwargs):
+    
+    if ( action != 'add' and action != 'delete' ):
+        result_str = f'\'{action}\' is not an acceptable API action'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
+    
+    if (action == 'add'):
+        
+        payload = {
+        '_action': 'add',
+        'name': snmp_user_name
+        }
+    
+        for key, value in kwargs.items():
+            if(key == 'snmp_auth_protocol'):
+                if (value == 'md5' or value == 'sha'):
+                    payload[key] = value
+                else:
+                    result_str = f'\'{value}\' is not a configurable option for the {key} attribute of a SNMP user'
+                    result = {'result_status': 1, 'result_str': result_str} 
+                    return result 
+            elif(key == 'authpass'):
+                payload[key] = value
+            elif(key == 'snmp_privacy_protocol'):
+                if (value == 'aes' or value == 'des'):
+                    payload[key] = value
+                else:
+                    result_str = f'\'{value}\' is not a configurable option for the {key} attribute of a SNMP user'
+                    result = {'result_status': 1, 'result_str': result_str} 
+                    return result 
+            elif(key == 'privpass'):
+                payload[key] = value         
+            else:
+                result_str = f'\'{key}\' is not a configurable setting for a NTP server'
+                result = {'result_status': 1, 'result_str': result_str} 
+                return result 
+
+    elif (action == 'delete'):
+        if (session.api_verbose == True):
+            print(f'Verbose: Checking to see if SNMP user \'{snmp_user_name}\' already exists')
+
+        snmp_user_list = get_snmp_server_user(session,config_path)
+
+        payload = {
+        '_action': 'delete',
+        'name': snmp_user_name
+        }
+
+        if not snmp_user_list:
+            result_str = f'SNMP user \'{snmp_user_name}\' does not exist'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+
+        else:
+            for user in snmp_user_list:
+                if (user['name'] == snmp_user_name):
+                    break        
+            else:
+                result_str = f'SNMP user \'{snmp_user_name}\' does not exist'
+                result = {'result_status': 1, 'result_str': result_str} 
+                return result
+    
+        if (session.api_verbose == True):
+            print(f'Verbose: SNMP user \'{snmp_user_name}\' exists')
+    
+    post_url = 'configuration/object/snmp_ser_user'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to {action} SNMP user \'{snmp_user_name}\'')
+    
+    response = session.post(post_url, config_path, payload)
+
+    if (response.status_code == 200):
+        
+        response_json = response.json()
+        
+        if (response_json['_global_result']['status'] == 0):
+            result_str = f'{action.upper()} SNMP user \'{snmp_user_name}\' - SUCCESS'
+            result = {'result_status': 0, 'result_str': result_str} 
+            return result
+        else:
+            result_str = f'{action.upper()} SNMP user \'{snmp_user_name}\' - FAILED'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+    else:
+        result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
