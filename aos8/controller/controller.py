@@ -770,3 +770,37 @@ def post_snmp_server_host_snmpv3(session, config_path, action, snmp_host_ip, snm
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
         return result
+
+def post_copy_ftp_flash(session, config_path, ftp_host, ftp_user, ftp_password, srcfilename, destfilename):
+
+    payload = {
+        'ftphost': ftp_host,
+        'user': ftp_user,
+        'passwd': ftp_password,      
+        'filename': srcfilename,
+        'destfilename': destfilename
+        }
+
+    post_url = 'configuration/object/copy_ftp_flash'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to FTP file \'{srcfilename}\' to flash')
+    
+    response = session.post(post_url, config_path, payload)
+
+    if (response.status_code == 200):
+        
+        response_json = response.json()
+        
+        if (response_json['_global_result']['status'] == 0):
+            result_str = f'FTP file \'{srcfilename}\' to flash - SUCCESS'
+            result = {'result_status': 0, 'result_str': result_str} 
+            return result
+        else:
+            result_str = f'FTP file \'{srcfilename}\' to flash - FAILED'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+    else:
+        result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
