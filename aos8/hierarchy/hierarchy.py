@@ -19,7 +19,7 @@ def get_node_hierarchy(session):
     # Unsuccessful GET for node hierarchy
     else:
         if (session.api_verbose == True):
-                print('Verbose: Unable to retrive node hierarchy')
+                print('Verbose: Unable to retrieve node hierarchy')
         return None
 
 def parse_node_hierarchy(node_hierarchy):
