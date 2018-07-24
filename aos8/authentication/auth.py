@@ -17,7 +17,7 @@ def get_tacacs_server(session, config_path):
     
     else:
         if (session.api_verbose == True):
-                print('Verbose: Unable to retrive TACACS server list')
+                print('Verbose: Unable to retrieve TACACS server list')
         return None
 
 def post_tacacs_server(session, config_path, action, tacacs_server_name, **kwargs):
@@ -126,7 +126,7 @@ def get_dot1X_auth_profiles(session, config_path):
     
     else:
         if (session.api_verbose == True):
-                print('Verbose: Unable to retrive Dot1X auth profile list')
+                print('Verbose: Unable to retrieve Dot1X auth profile list')
         return None
 
 def post_dot1X_auth_profile(session, config_path, action, profile_name, **kwargs):
@@ -322,7 +322,7 @@ def get_aaa_profiles(session, config_path):
     
     else:
         if (session.api_verbose == True):
-                print('Verbose: Unable to retrive AAA Profile list')
+                print('Verbose: Unable to retrieve AAA Profile list')
         return None
 
 def post_aaa_profile(session, config_path, action, profile_name, **kwargs):
@@ -466,7 +466,7 @@ def get_cp_auth_profiles(session, config_path):
     
     else:
         if (session.api_verbose == True):
-                print('Verbose: Unable to retrive captive portal auth profile list')
+                print('Verbose: Unable to retrieve captive portal auth profile list')
         return None
 
 def post_cp_auth_profile(session, config_path, action, profile_name, **kwargs):
@@ -624,7 +624,7 @@ def get_server_group_profiles(session, config_path):
     
     else:
         if (session.api_verbose == True):
-                print('Verbose: Unable to retrive server group profile list')
+                print('Verbose: Unable to retrieve server group profile list')
         return None
 
 def post_server_group_profile(session, config_path, action, sg_name, **kwargs):
@@ -739,7 +739,7 @@ def get_tacacs_accounting(session, config_path):
     
     else:
         if (session.api_verbose == True):
-                print('Verbose: Unable to retrive TACACS account configuration')
+                print('Verbose: Unable to retrieve TACACS account configuration')
         return None
 
 def post_tacacs_accounting(session, config_path, action, **kwargs):
@@ -812,7 +812,7 @@ def get_radius_nas_ip(session, config_path):
     
     else:
         if (session.api_verbose == True):
-                print('Verbose: Unable to retrive RADIUS NAS IP address')
+                print('Verbose: Unable to retrieve RADIUS NAS IP address')
         return None
 
 def post_radius_nas_ip(session, config_path, action, **kwargs):
@@ -885,7 +885,7 @@ def get_mac_auth_profiles(session, config_path):
     
     else:
         if (session.api_verbose == True):
-                print('Verbose: Unable to retrive MAC auth profile list')
+                print('Verbose: Unable to retrieve MAC auth profile list')
         return None
 
 def post_mac_auth_profile(session, config_path, action, profile_name, **kwargs):
@@ -1002,7 +1002,7 @@ def get_radius_servers(session, config_path):
     
     else:
         if (session.api_verbose == True):
-                print('Verbose: Unable to retrive RADIUS server list')
+                print('Verbose: Unable to retrieve RADIUS server list')
         return None
 
 def post_radius_server(session, config_path, action, rad_server_name, **kwargs):
