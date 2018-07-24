@@ -1272,3 +1272,54 @@ def post_snmp_server_user(session, config_path, action, snmp_user_name, **kwargs
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
         return result
+
+def get_syslocation(session, config_path):
+
+    get_url = 'configuration/object/global_syslocation'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending GET to \'{session.api_url}{get_url}\' to retrieve syslocation')
+    
+    response = session.get(get_url, config_path)
+
+    if (response.status_code == 200):
+        response_json = response.json()
+        if (session.api_verbose == True):
+                print('Verbose: syslocation retrieved successfully')
+        return response_json['_data']['global_syslocation']
+    
+    else:
+        if (session.api_verbose == True):
+                print('Verbose: Unable to retrieve syslocation')
+        return None
+
+def post_syslocation(session, config_path, syslocation=" "):
+    
+    payload = {
+        '_action': 'add',
+        'syslocation': syslocation
+        }
+    
+    post_url = 'configuration/object/global_syslocation'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending POST to \'{session.api_url}{post_url}\' to add syslocation')
+    
+    response = session.post(post_url, config_path, payload)
+
+    if (response.status_code == 200):
+        
+        response_json = response.json()
+        
+        if (response_json['_global_result']['status'] == 0):
+            result_str = f'Add syslocation - SUCCESS'
+            result = {'result_status': 0, 'result_str': result_str} 
+            return result
+        else:
+            result_str = f'Add syslocation - FAILED'
+            result = {'result_status': 1, 'result_str': result_str} 
+            return result
+    else:
+        result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
+        result = {'result_status': 1, 'result_str': result_str} 
+        return result
