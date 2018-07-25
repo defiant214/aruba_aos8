@@ -47,3 +47,27 @@ def generate_csr_output(session):
     csr_output = '\n'.join(show_output.get('_data')[csr_begin:])
 
     return csr_output
+
+def csr_output_to_file(csr_output, filename):
+    with open(filename,'w',) as file:
+        file.write(csr_output)
+
+def get_crypto_local_pki_cert(session, config_path):
+
+    get_url = 'configuration/object/crypto_local_pki_cert'
+
+    if (session.api_verbose == True):
+        print(f'Verbose: Sending GET to \'{session.api_url}{get_url}\' to retrieve local certificate list')
+    
+    response = session.get(get_url, config_path)
+
+    if (response.status_code == 200):
+        response_json = response.json()
+        if (session.api_verbose == True):
+                print('Verbose: Local certificate list retrieved successfully')
+        return response_json['_data']['crypto_local_pki_cert']
+    
+    else:
+        if (session.api_verbose == True):
+                print('Verbose: Unable to retrieve local certificate list')
+        return None
