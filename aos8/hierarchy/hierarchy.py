@@ -245,4 +245,3 @@ def post_configuration_purge_pending(session, config_path):
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
         return result
-
