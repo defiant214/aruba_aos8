@@ -46,9 +46,15 @@ def post_tacacs_server(session, config_path, action, tacacs_server_name, **kwarg
             elif(key == 'tacacs_timeout'):
                 payload[key] = {'timeout': value}
             elif(key == 'tacacs_mode'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'tacacs_authorization'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'tac_srcvlan_ip6addr'):
                 payload[key] = {'ipv6addr': value.get('ipv6addr'), 'vlanid': value.get('vlanid')}
             elif(key == 'tacacs_server_clone'):
@@ -147,13 +153,19 @@ def post_dot1X_auth_profile(session, config_path, action, profile_name, **kwargs
             if(key == 'dot1x_maxf'):
                 payload[key] = {'failure-count': value}
             elif(key == 'machine_auth_enf_enable'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'machine_auth_def_role'):
                 payload[key] = {'ma-default-role': value}
             elif(key == 'machine_auth_cache_tmout'):
                 payload[key] = {'ma-cache-tmout': value}
             elif(key == 'machine_auth_blklist'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'machine_auth_user_def_role'):
                 payload[key] = {'ua-default-role': value}
             elif(key == 'idrequest_period'):
@@ -163,9 +175,15 @@ def post_dot1X_auth_profile(session, config_path, action, profile_name, **kwargs
             elif(key == 'reauth_period'):
                 payload[key] = {'ra-period': value}
             elif(key == 'use_server_reauth_period'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'use_server_reauth_term_action'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'mkey_period'):
                 payload[key] = {'mkr-period': value}
             elif(key == 'ukey_period'):
@@ -195,37 +213,73 @@ def post_dot1X_auth_profile(session, config_path, action, profile_name, **kwargs
             elif(key == 'keycache_tmout'):
                 payload[key] = {'kc-tmout': value}
             elif(key == 'delete_keycache'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'wpa_key_retries'):
                 payload[key] = {'wpak-retries': value}
             elif(key == 'multicast_keyrotation'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'unicast_keyrotation'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'reauthentication'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'opp_key_caching'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'validate_pmkid'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'use_session_key'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'use_static_key'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'xSec_mtu'):
                 payload[key] = {'xsecmtu': value}
             elif(key == 'termination_mode'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'termination_eaptype'):
                 payload[key] = {'eap_t': value}
             elif(key == 'termination_innereaptype'):
                 payload[key] = {'inner_eap_t': value}
             elif(key == 'enforce_suite_b_128'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'enforce_suite_b_192'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'enable_token_caching'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'token_caching_period'):
                 payload[key] = {'tk-cache-period': value}
             elif(key == 'ca_cert'):
@@ -233,19 +287,37 @@ def post_dot1X_auth_profile(session, config_path, action, profile_name, **kwargs
             elif(key == 'server_cert'):
                 payload[key] = {'server-cert-name': value}
             elif(key == 'tls_guest_access'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'tls_guest_role'):
                 payload[key] = {'tg-role': value}
             elif(key == 'iesaa'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'eapol_logoff'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'ignore_eap_id_match'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'wpa_fast_handover'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'dot1x_cert_cn_lookup'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'dot1x_auth_profile_clone'):
                 payload[key] = {'source': value}
             else:
@@ -357,13 +429,25 @@ def post_aaa_profile(session, config_path, action, profile_name, **kwargs):
             elif(key == 'dot1x_server_group'):
                 payload[key] = {'srv-group':value}
             elif(key == 'download_role'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'username_from_dhcp_opt12'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'l2_auth_fail_through'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'multiple_server_accounting'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'user_idle_timeout_aaa'):
                 payload[key] = {'seconds':value}
             elif(key == 'max_ipv4_for_wireless'):
@@ -371,9 +455,15 @@ def post_aaa_profile(session, config_path, action, profile_name, **kwargs):
             elif(key == 'rad_acct_sg'):
                 payload[key] = {'server_group_name':value}
             elif(key == 'enable_roaming_rad_acct'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'enable_rad_interim_acct'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'xml_api_client'):
                 payload[key] = {'xml_api_server':value}
             elif(key == 'rfc3576_client'):
@@ -381,15 +471,30 @@ def post_aaa_profile(session, config_path, action, profile_name, **kwargs):
             elif(key == 'udr_group'):
                 payload[key] = {'udr_group':value}
             elif(key == 'wwroam'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'devtype_classification'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'enforce_dhcp'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'integrate_pan'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'open_system_rad_acc'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'aaa_prof_clone'):
                 payload[key] = {'source':value}
             else:
@@ -493,13 +598,25 @@ def post_cp_auth_profile(session, config_path, action, profile_name, **kwargs):
             elif(key == 'cp_redirect_pause'):
                 payload[key] = {'redirect-pause':value}
             elif(key == 'allow_user'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'allow_guest'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'logout_popup'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'cp_proto_http'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'cp_min_delay'):
                 payload[key] = {'minimum-delay':value}
             elif(key == 'cp_max_delay'):
@@ -509,7 +626,10 @@ def post_cp_auth_profile(session, config_path, action, profile_name, **kwargs):
             elif(key == 'cp_maxf'):
                 payload[key] = {'max-authentication-failures':value}
             elif(key == 'cp_show_fqdn'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'authentication_method'):
                 if (value == 'PAP' or value == 'MSCHAPv2' or value == 'chap'):                 
                     payload[key] = {'captive_auth_t':value}
@@ -522,29 +642,47 @@ def post_cp_auth_profile(session, config_path, action, profile_name, **kwargs):
             elif(key == 'cp_welcome_location'):
                 payload[key] = {'welcome-page':value}
             elif(key == 'cp_welcome_location_enable'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'proxy'):
                 payload[key] = {'address':value.get('address'), 'port':value.get('port')}
             elif(key == 'switch_ip_in_redir_url'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'user_vlan_in_redir_url'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'ip_addr_in_redir_url'):
                 payload[key] = {'ip-addr-in-redirection-url':value}
             elif(key == 'single_session'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'cp_white_list'):
                 payload[key] = {'white-list':value}
             elif(key == 'cp_black_list'):
                 payload[key] = {'black-list':value}
             elif(key == 'show_aup'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'user_idle_timeout_cp'):
                 payload[key] = {'seconds':value}
             elif(key == 'cp_redirect_url'):
                 payload[key] = {'redirect-url':value}
             elif(key == 'apple_cna_bypass'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'url_hash_key'):
                 payload[key] = {'url-hash-key':value}
             elif(key == 'cp_auth_profile_clone'):
@@ -643,9 +781,15 @@ def post_server_group_profile(session, config_path, action, sg_name, **kwargs):
     
         for key, value in kwargs.items():
             if(key == 'fail_thru'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'load_balance'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'auth_server'):
                 '''
                 Value must be list of dicts in following format:
@@ -759,13 +903,25 @@ def post_tacacs_accounting(session, config_path, action, **kwargs):
             if(key == 'tacacs_acc__sg'):
                 payload[key] = {'sg': value}
             elif(key == 'tacacs_acc__cfg'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'tacacs_acc__action'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'tacacs_acc__show'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'tacacs_acc__all'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             else:
                 result_str = f'\'{key}\' is not a configurable setting for TACACS accounting'
                 result = {'result_status': 1, 'result_str': result_str} 
@@ -920,11 +1076,17 @@ def post_mac_auth_profile(session, config_path, action, profile_name, **kwargs):
             elif(key == 'mba_maxf'):
                 payload[key] = {'max-authentication-failures': value}
             elif(key == 'mac_reauthentication'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'mac_reauth_period'):
                 payload[key] = {'ra-period': value}
             elif(key == 'mac_use_server_reauth_period'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'mac_auth_profile_clone'):
                 payload[key] = {'source': value}
             else:
@@ -1021,7 +1183,10 @@ def post_radius_server(session, config_path, action, rad_server_name, **kwargs):
     
         for key, value in kwargs.items():
             if(key == 'ipv6_enable'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'rad_host'):
                 payload[key] = {'host': value}
             elif(key == 'rad_key'):
@@ -1050,20 +1215,38 @@ def post_radius_server(session, config_path, action, rad_server_name, **kwargs):
                 elif value.get('vlanid'):
                     payload[key] = {'vlanid': value.get('vlanid')}
             elif(key == 'use_md5'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'calling_station_use_ip'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'rad_mode'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'rad_mac_lowercase'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'rad_mac_delimiter'):
                 if (value == 'none' or value == 'colon' or value == 'dash' or value == 'oui-nic'):
                     payload[key] = {'mba_delimiter_t': value}
             elif(key == 'rad_service_type_framed_user'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'radsec_enable'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'radsec_ca_cert'):
                 payload[key] = {'radsec-trusted-cacert-name': value}
             elif(key == 'radsec_server_cert'):
