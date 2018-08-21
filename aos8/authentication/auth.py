@@ -103,13 +103,13 @@ def post_tacacs_server(session, config_path, action, tacacs_server_name, **kwarg
         
         response_json = response.json()
         
+        status_str = response_json['_global_result']['status_str']
+
         if (response_json['_global_result']['status'] == 0):
-            status_str = response_json['_global_result']['status_str']
             result_str = f'{action.upper()} TACACS server \'{tacacs_server_name}\' - {status_str}'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            status_str = response_json['_global_result']['status_str']
             result_str = f'{action.upper()} TACACS server \'{tacacs_server_name}\' - {status_str}'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
@@ -366,14 +366,14 @@ def post_dot1X_auth_profile(session, config_path, action, profile_name, **kwargs
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
         
         if (response_json['_global_result']['status'] == 0):
-            status_str = response_json['_global_result']['status_str']         
             result_str = f'{action.upper()} dot1X auth profile \'{profile_name}\' - {status_str}'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            status_str = response_json['_global_result']['status_str']                     
             result_str = f'{action.upper()} dot1X auth profile \'{profile_name}\' - {status_str}'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
@@ -544,14 +544,14 @@ def post_aaa_profile(session, config_path, action, profile_name, **kwargs):
     if (response.status_code == 200):
         
         response_json = response.json()
-        
+
+        status_str = response_json['_global_result']['status_str']
+
         if (response_json['_global_result']['status'] == 0):
-            status_str = response_json['_global_result']['status_str']         
             result_str = f'{action.upper()} aaa profile \'{profile_name}\' - {status_str}'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            status_str = response_json['_global_result']['status_str']         
             result_str = f'{action.upper()} aaa profile \'{profile_name}\' - {status_str}'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
@@ -738,13 +738,13 @@ def post_cp_auth_profile(session, config_path, action, profile_name, **kwargs):
         
         response_json = response.json()
         
+        status_str = response_json['_global_result']['status_str']
+
         if (response_json['_global_result']['status'] == 0):
-            status_str = response_json['_global_result']['status_str']         
             result_str = f'{action.upper()} captive portal auth profile \'{profile_name}\' - {status_str}'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            status_str = response_json['_global_result']['status_str']         
             result_str = f'{action.upper()} captive portal auth profile \'{profile_name}\' - {status_str}'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
@@ -860,14 +860,14 @@ def post_server_group_profile(session, config_path, action, sg_name, **kwargs):
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
         
         if (response_json['_global_result']['status'] == 0):
-            status_str = response_json['_global_result']['status_str']         
             result_str = f'{action.upper()} server group profile \'{sg_name}\' - {status_str}'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            status_str = response_json['_global_result']['status_str']         
             result_str = f'{action.upper()} server group profile \'{sg_name}\' - {status_str}'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
@@ -947,14 +947,14 @@ def post_tacacs_accounting(session, config_path, action, **kwargs):
     if (response.status_code == 200):
         
         response_json = response.json()
+    
+        status_str = response_json['_global_result']['status_str']
         
         if (response_json['_global_result']['status'] == 0):
-            status_str = response_json['_global_result']['status_str']         
             result_str = f'{action.upper()} TACACS accounting configuration - {status_str}'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            status_str = response_json['_global_result']['status_str']         
             result_str = f'{action.upper()} TACACS accounting configuration - {status_str}'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
@@ -1023,14 +1023,14 @@ def post_radius_nas_ip(session, config_path, action, **kwargs):
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
         
         if (response_json['_global_result']['status'] == 0):
-            status_str = response_json['_global_result']['status_str']         
             result_str = f'{action.upper()} RADIUS NAS IP address - {status_str}'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            status_str = response_json['_global_result']['status_str']         
             result_str = f'{action.upper()} RADIUS NAS IP address - {status_str}'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
@@ -1147,14 +1147,14 @@ def post_mac_auth_profile(session, config_path, action, profile_name, **kwargs):
     if (response.status_code == 200):
         
         response_json = response.json()
+    
+        status_str = response_json['_global_result']['status_str']
         
         if (response_json['_global_result']['status'] == 0):
-            status_str = response_json['_global_result']['status_str']         
             result_str = f'{action.upper()} MAC auth profile \'{profile_name}\' - {status_str}'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            status_str = response_json['_global_result']['status_str']         
             result_str = f'{action.upper()} MAC auth profile \'{profile_name}\' - {status_str}'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
@@ -1318,14 +1318,14 @@ def post_radius_server(session, config_path, action, rad_server_name, **kwargs):
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
         
         if (response_json['_global_result']['status'] == 0):
-            status_str = response_json['_global_result']['status_str']         
             result_str = f'{action.upper()} RADIUS server \'{rad_server_name}\' - {status_str}'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            status_str = response_json['_global_result']['status_str']         
             result_str = f'{action.upper()} RADIUS server \'{rad_server_name}\' - {status_str}'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
