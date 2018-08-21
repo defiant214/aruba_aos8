@@ -104,11 +104,13 @@ def post_tacacs_server(session, config_path, action, tacacs_server_name, **kwarg
         response_json = response.json()
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} TACACS server \'{tacacs_server_name}\' - SUCCESS'
+            status_str = response_json['_global_result']['status_str']
+            result_str = f'{action.upper()} TACACS server \'{tacacs_server_name}\' - {status_str}'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} TACACS server \'{tacacs_server_name}\' - FAILED'
+            status_str = response_json['_global_result']['status_str']
+            result_str = f'{action.upper()} TACACS server \'{tacacs_server_name}\' - {status_str}'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
     else:
@@ -366,11 +368,13 @@ def post_dot1X_auth_profile(session, config_path, action, profile_name, **kwargs
         response_json = response.json()
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} dot1X auth profile \'{profile_name}\' - SUCCESS'
+            status_str = response_json['_global_result']['status_str']         
+            result_str = f'{action.upper()} dot1X auth profile \'{profile_name}\' - {status_str}'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} dot1X auth profile \'{profile_name}\' - FAILED'
+            status_str = response_json['_global_result']['status_str']                     
+            result_str = f'{action.upper()} dot1X auth profile \'{profile_name}\' - {status_str}'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
     else:
@@ -542,11 +546,13 @@ def post_aaa_profile(session, config_path, action, profile_name, **kwargs):
         response_json = response.json()
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} aaa profile \'{profile_name}\' - SUCCESS'
+            status_str = response_json['_global_result']['status_str']         
+            result_str = f'{action.upper()} aaa profile \'{profile_name}\' - {status_str}'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} aaa profile \'{profile_name}\' - FAILED'
+            status_str = response_json['_global_result']['status_str']         
+            result_str = f'{action.upper()} aaa profile \'{profile_name}\' - {status_str}'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
     else:
@@ -733,11 +739,13 @@ def post_cp_auth_profile(session, config_path, action, profile_name, **kwargs):
         response_json = response.json()
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} captive portal auth profile \'{profile_name}\' - SUCCESS'
+            status_str = response_json['_global_result']['status_str']         
+            result_str = f'{action.upper()} captive portal auth profile \'{profile_name}\' - {status_str}'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} captive portal auth profile \'{profile_name}\' - FAILED'
+            status_str = response_json['_global_result']['status_str']         
+            result_str = f'{action.upper()} captive portal auth profile \'{profile_name}\' - {status_str}'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
     else:
@@ -854,11 +862,13 @@ def post_server_group_profile(session, config_path, action, sg_name, **kwargs):
         response_json = response.json()
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} server group profile \'{sg_name}\' - SUCCESS'
+            status_str = response_json['_global_result']['status_str']         
+            result_str = f'{action.upper()} server group profile \'{sg_name}\' - {status_str}'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} server group profile \'{sg_name}\' - FAILED'
+            status_str = response_json['_global_result']['status_str']         
+            result_str = f'{action.upper()} server group profile \'{sg_name}\' - {status_str}'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
     else:
@@ -939,11 +949,13 @@ def post_tacacs_accounting(session, config_path, action, **kwargs):
         response_json = response.json()
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} TACACS accounting configuration - SUCCESS'
+            status_str = response_json['_global_result']['status_str']         
+            result_str = f'{action.upper()} TACACS accounting configuration - {status_str}'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} TACACS accounting configuration - FAILED'
+            status_str = response_json['_global_result']['status_str']         
+            result_str = f'{action.upper()} TACACS accounting configuration - {status_str}'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
     else:
@@ -1013,11 +1025,13 @@ def post_radius_nas_ip(session, config_path, action, **kwargs):
         response_json = response.json()
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} RADIUS NAS IP address - SUCCESS'
+            status_str = response_json['_global_result']['status_str']         
+            result_str = f'{action.upper()} RADIUS NAS IP address - {status_str}'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} RADIUS NAS IP address - FAILED'
+            status_str = response_json['_global_result']['status_str']         
+            result_str = f'{action.upper()} RADIUS NAS IP address - {status_str}'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
     else:
@@ -1135,11 +1149,13 @@ def post_mac_auth_profile(session, config_path, action, profile_name, **kwargs):
         response_json = response.json()
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} MAC auth profile \'{profile_name}\' - SUCCESS'
+            status_str = response_json['_global_result']['status_str']         
+            result_str = f'{action.upper()} MAC auth profile \'{profile_name}\' - {status_str}'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} MAC auth profile \'{profile_name}\' - FAILED'
+            status_str = response_json['_global_result']['status_str']         
+            result_str = f'{action.upper()} MAC auth profile \'{profile_name}\' - {status_str}'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
     else:
@@ -1304,11 +1320,13 @@ def post_radius_server(session, config_path, action, rad_server_name, **kwargs):
         response_json = response.json()
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} RADIUS server \'{rad_server_name}\' - SUCCESS'
+            status_str = response_json['_global_result']['status_str']         
+            result_str = f'{action.upper()} RADIUS server \'{rad_server_name}\' - {status_str}'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} RADIUS server \'{rad_server_name}\' - FAILED'
+            status_str = response_json['_global_result']['status_str']         
+            result_str = f'{action.upper()} RADIUS server \'{rad_server_name}\' - {status_str}'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
     else:
