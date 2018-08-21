@@ -29,15 +29,17 @@ def post_crypto_pki_csr_rsa(session, config_path, key_length, common_name,
     if (response.status_code == 200):
         
         response_json = response.json()
-        
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'Create RSA CSR - {status_str}'
+
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'Create RSA CSR - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'Create RSA CSR - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -131,15 +133,17 @@ def post_crypto_local_pki_cert(session, config_path, action, cert_type, cert_nam
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'{action.upper()} local certificate \'{cert_name}\' - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} local certificate \'{cert_name}\' - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} local certificate \'{cert_name}\' - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
