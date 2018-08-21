@@ -14,15 +14,17 @@ def post_snmp_server_enable_trap(session, config_path):
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'Enable SNMP traps - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'Enable SNMP traps - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'Enable SNMP traps - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -45,15 +47,18 @@ def post_copy_running_tftp(session, config_path, tftp_host, filename):
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'Copy running-config to TFTP server - {status_str}'
+
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'Copy running-config to TFTP server - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'Copy running-config to TFTP server - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -100,15 +105,17 @@ def post_syscontact(session, config_path, action='add', syscontact=" "):
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'{action.upper()} syscontact - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} syscontact - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} syscontact - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -164,15 +171,17 @@ def post_ip_domain_name(session, config_path, action, domain_name):
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'{action.upper()} IP domain name \'{domain_name}\' - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} IP domain name \'{domain_name}\' - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} IP domain name \'{domain_name}\' - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -192,15 +201,17 @@ def post_snmp_server_source_controller_ip(session, config_path):
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'SNMP server source as controller IP - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'SNMP server source as controller IP - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'SNMP server source as controller IP - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -226,15 +237,17 @@ def post_copy_ftp_system(session, config_path, partition_num, ftp_host, ftp_user
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'FTP image to system partition {partition_num} - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'FTP image to system partition {partition_num} - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'FTP image to system partition {partition_num} - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -330,15 +343,17 @@ def post_snmp_server_host_snmpv2c(session, config_path, action, snmp_host_ip, sn
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'{action.upper()} SNMP v2c host \'{snmp_host_ip}\' - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} SNMP v2c host \'{snmp_host_ip}\' - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} SNMP v2c host \'{snmp_host_ip}\' - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -364,15 +379,17 @@ def post_copy_flash_scp(session, config_path, scp_host, scp_username, scp_passwo
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'SCP copy flash:/{srcfilename} to {scp_host}:/{dstfilename} - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'SCP copy flash:/{srcfilename} to {scp_host}:/{dstfilename} - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'SCP copy flash:/{srcfilename} to {scp_host}:/{dstfilename} - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -395,13 +412,14 @@ def post_copy_running_flash(session, config_path, filename):
     if (response.status_code == 200):
         
         response_json = response.json()
-        
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'copy running-config to flash:/{filename} - {status_str}'
+       
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'copy running-config to flash:/{filename} - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'copy running-config to flash:/{filename} - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
     else:
@@ -446,15 +464,17 @@ def post_hostname(session, config_path, hostname):
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'Add hostname \'{hostname}\' to \'{config_path}\' - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'Add hostname \'{hostname}\' to \'{config_path}\' - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'Add hostname \'{hostname}\' to \'{config_path}\' - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -515,15 +535,17 @@ def post_masterip(session, config_path, masterip_val, **kwargs):
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'Add masterip \'{masterip_val}\' - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'Add masterip \'{masterip_val}\' - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'Add masterip \'{masterip_val}\' - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -581,15 +603,17 @@ def post_controller_ip(session, config_path, **kwargs):
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'Add controller IP - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'Add controller IP - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'Add controller IP - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -646,15 +670,17 @@ def post_snmp_server_community(session, config_path, action, snmp_community_stri
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'{action.upper()} SNMP community string \'{snmp_community_string}\' - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} SNMP community string \'{snmp_community_string}\' - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} SNMP community string \'{snmp_community_string}\' - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -757,15 +783,17 @@ def post_snmp_server_host_snmpv3(session, config_path, action, snmp_host_ip, snm
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'{action.upper()} SNMP v3 host \'{snmp_host_ip}\' - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} SNMP v3 host \'{snmp_host_ip}\' - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} SNMP v3 host \'{snmp_host_ip}\' - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -791,15 +819,17 @@ def post_copy_ftp_flash(session, config_path, ftp_host, ftp_user, ftp_password, 
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'FTP file \'{srcfilename}\' to flash - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'FTP file \'{srcfilename}\' to flash - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'FTP file \'{srcfilename}\' to flash - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -856,15 +886,17 @@ def post_snmp_server_trap_source(session, config_path, action, snmp_trap_source_
     if (response.status_code == 200):
         
         response_json = response.json()
-        
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'{action.upper()} SNMP trap source as \'{snmp_trap_source_ip}\' - {status_str}'
+
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} SNMP trap source as \'{snmp_trap_source_ip}\' - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} SNMP trap source as \'{snmp_trap_source_ip}\' - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -890,15 +922,17 @@ def post_copy_scp_flash(session, config_path, scp_host, scp_username, scp_passwo
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'SCP copy {scp_host}:/{srcfilename} to flash:/{dstfilename} - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'SCP copy {scp_host}:/{srcfilename} to flash:/{dstfilename} - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'SCP copy {scp_host}:/{srcfilename} to flash:/{dstfilename} - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -954,15 +988,17 @@ def post_clock_set_timezone(session, config_path, action, timezone):
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'{action.upper()} timezone \'{timezone}\' - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} timezone \'{timezone}\' - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} timezone \'{timezone}\' - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -1050,15 +1086,17 @@ def post_ntp_server_info(session, config_path, action, ntp_server_ip, **kwargs):
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'{action.upper()} NTP server \'{ntp_server_ip}\' - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} NTP server \'{ntp_server_ip}\' - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} NTP server \'{ntp_server_ip}\' - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -1115,13 +1153,14 @@ def post_snmp_server_trap_enable(session, config_path, action, snmp_trap_name):
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'{action.upper()} SNMP trap \'{snmp_trap_name}\' - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} SNMP trap \'{snmp_trap_name}\' - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} SNMP trap \'{snmp_trap_name}\' - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
     else:
@@ -1149,15 +1188,17 @@ def post_copy_scp_system(session, config_path, partition_num, scp_host, scp_user
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'SCP image to system partition {partition_num} - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'SCP image to system partition {partition_num} - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'SCP image to system partition {partition_num} - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -1259,15 +1300,17 @@ def post_snmp_server_user(session, config_path, action, snmp_user_name, **kwargs
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'{action.upper()} SNMP user \'{snmp_user_name}\' - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} SNMP user \'{snmp_user_name}\' - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} SNMP user \'{snmp_user_name}\' - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -1310,15 +1353,17 @@ def post_syslocation(session, config_path, syslocation=" "):
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'Add syslocation - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'Add syslocation - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'Add syslocation - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -1342,15 +1387,17 @@ def post_copy_tftp_flash(session, config_path, tftp_host, srcfilename, dstfilena
     if (response.status_code == 200):
         
         response_json = response.json()
-        
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'copy tftp:/{srcfilename} to flash - {status_str}'
+       
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'copy tftp:/{srcfilename} to flash - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'copy tftp:/{srcfilename} to flash - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -1421,13 +1468,14 @@ def post_ntp_source(session, config_path, action, **kwargs):
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'{action.upper()} NTP source interface - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} NTP source interface - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} NTP source interface - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
     else:
@@ -1486,15 +1534,17 @@ def post_ip_name_server(session, config_path, action, name_server_ip):
     if (response.status_code == 200):
         
         response_json = response.json()
-        
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'{action.upper()} IP name server \'{name_server_ip}\' - {status_str}'
+       
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} IP name server \'{name_server_ip}\' - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} IP name server \'{name_server_ip}\' - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -1520,15 +1570,17 @@ def post_copy_running_ftp(session, config_path, ftp_host, ftp_user, ftp_password
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'Copy running-config to FTP server - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'Copy running-config to FTP server - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'Copy running-config to FTP server - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -1551,16 +1603,17 @@ def post_rename_file(session, config_path, filename, newfilename):
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'Rename file {filename} to {newfilename} - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'Rename file {filename} to {newfilename} - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'Rename file {filename} to {newfilename} - SUCCESS'
-            result_str = f'Copy running-config to FTP server - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -1621,15 +1674,17 @@ def post_secmasterip(session, config_path, secmasterip_val, **kwargs):
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'Add secondary masterip \'{secmasterip_val}\' - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'Add secondary masterip \'{secmasterip_val}\' - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'Add secondary masterip \'{secmasterip_val}\' - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -1653,15 +1708,17 @@ def post_copy_flash_tftp(session, config_path, tftp_host, srcfilename, dstfilena
     if (response.status_code == 200):
         
         response_json = response.json()
-        
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'copy flash:{srcfilename} to TFTP server - {status_str}'
+       
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'copy flash:{srcfilename} to TFTP server - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'copy flash:{srcfilename} to TFTP server - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -1685,15 +1742,17 @@ def post_copy_tftp_system(session, config_path, partition_num, tftp_host, filena
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'TFTP image to system partition {partition_num} - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'TFTP image to system partition {partition_num} - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'TFTP image to system partition {partition_num} - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -1736,15 +1795,17 @@ def post_location(session, config_path, switch_location=" "):
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'Add switch location - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'Add switch location - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'Add switch location - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -1771,15 +1832,17 @@ def post_copy_flash_ftp(session, config_path, ftp_host, ftp_user, ftp_password, 
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'Copy flash:{srcfilename} to FTP server - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'Copy flash:{srcfilename} to FTP server - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'Copy flash:{srcfilename} to FTP server - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
@@ -1836,15 +1899,17 @@ def post_geolocation(session, config_path, action, latitude=None, longitude=None
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'{action.upper()} geolocation - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} geolocation - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} geolocation - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
