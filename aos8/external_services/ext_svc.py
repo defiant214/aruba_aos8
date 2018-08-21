@@ -37,11 +37,20 @@ def post_rfc3576_client_profile(session, config_path, action, server_ip, **kwarg
             if(key == 'rfc3576_secret'):
                 payload[key] = {'key': value}
             elif(key == 'rfc3576_radsec_enable'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'replay_protect'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'event_timestamp_check'):
-                payload[key] = {}
+                if (value == True):
+                    payload[key] = {}
+                else:
+                    payload[key] = {"_action": "delete"}
             elif(key == 'window_duration'):
                 payload[key] = {'WindowDuration': value}
             elif(key == 'rfc3576_client_prof_clone'):
@@ -90,15 +99,17 @@ def post_rfc3576_client_profile(session, config_path, action, server_ip, **kwarg
     if (response.status_code == 200):
         
         response_json = response.json()
-        
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'{action.upper()} RFC3576 client profile \'{server_ip}\' - {status_str}'
+
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} RFC3576 client profile \'{server_ip}\' - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} RFC3576 client profile \'{server_ip}\' - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 

@@ -130,13 +130,16 @@ def post_configuration_node(session, node_path, action):
     response = session.post(post_url, '/md', payload)
 
     if (response.status_code == 200):
+
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'{action.upper()} node \'{node_path}\' - {status_str}'      
+
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} node \'{node_path}\' - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} node \'{node_path}\' - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
 
@@ -201,13 +204,14 @@ def post_configuration_device(session, node_path, action, device_model, mac_addr
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'{action.upper()} device \'{mac_address}\' - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'{action.upper()} device \'{mac_address}\' - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'{action.upper()} device \'{mac_address}\' - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
 
@@ -232,15 +236,17 @@ def post_configuration_purge_pending(session, config_path):
     if (response.status_code == 200):
         
         response_json = response.json()
+
+        status_str = response_json['_global_result']['status_str']
+        result_str = f'Purge pending configuration - {status_str}'
         
         if (response_json['_global_result']['status'] == 0):
-            result_str = f'Purge pending configuration - SUCCESS'
             result = {'result_status': 0, 'result_str': result_str} 
             return result
         else:
-            result_str = f'Purge pending configuration - FAILED'
             result = {'result_status': 1, 'result_str': result_str} 
             return result
+
     else:
         result_str = f'POST to \'{session.api_url}{post_url}\' unsuccessful'
         result = {'result_status': 1, 'result_str': result_str} 
